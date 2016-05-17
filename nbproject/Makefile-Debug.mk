@@ -50,8 +50,8 @@ TESTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lm -lpthread -lX11
-CXXFLAGS=-lm -lpthread -lX11
+CCFLAGS=
+CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -73,21 +73,17 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ocr: ${OBJECTFILES}
 ${OBJECTDIR}/clustering_data.o: clustering_data.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -I/usr/local/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clustering_data.o clustering_data.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clustering_data.o clustering_data.cpp
 
 ${OBJECTDIR}/forecast.o: forecast.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -I/usr/local/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/forecast.o forecast.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/forecast.o forecast.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-<<<<<<< Updated upstream
-	$(COMPILE.cc) -g -I/usr/X11R6/lib -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
-=======
-	$(COMPILE.cc) -g -I/usr/include -I/usr/local/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
->>>>>>> Stashed changes
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -102,7 +98,7 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/newsimpletest.o ${OBJECTFILES:%.o=%_no
 ${TESTDIR}/tests/newsimpletest.o: tests/newsimpletest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/include -I/usr/local/include -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
+	$(COMPILE.cc) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/newsimpletest.o tests/newsimpletest.cpp
 
 
 ${OBJECTDIR}/clustering_data_nomain.o: ${OBJECTDIR}/clustering_data.o clustering_data.cpp 
@@ -113,7 +109,7 @@ ${OBJECTDIR}/clustering_data_nomain.o: ${OBJECTDIR}/clustering_data.o clustering
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g -I/usr/include -I/usr/local/include -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clustering_data_nomain.o clustering_data.cpp;\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clustering_data_nomain.o clustering_data.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/clustering_data.o ${OBJECTDIR}/clustering_data_nomain.o;\
 	fi
@@ -126,7 +122,7 @@ ${OBJECTDIR}/forecast_nomain.o: ${OBJECTDIR}/forecast.o forecast.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g -I/usr/include -I/usr/local/include -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/forecast_nomain.o forecast.cpp;\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/forecast_nomain.o forecast.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/forecast.o ${OBJECTDIR}/forecast_nomain.o;\
 	fi
@@ -139,7 +135,7 @@ ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g -I/usr/include -I/usr/local/include -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
+	    $(COMPILE.cc) -g -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/main.o ${OBJECTDIR}/main_nomain.o;\
 	fi

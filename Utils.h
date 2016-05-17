@@ -14,7 +14,10 @@
 #include <sstream>
 
 #include <stdlib.h>
+
+#include "boost/filesystem.hpp"
 #include "CImg.h"
+using namespace boost::filesystem;
 using namespace cimg_library;
 
 class Utils {
@@ -41,7 +44,7 @@ public:
      * @param path  Path to the image
      * @return      Grayscale image
      */
-    static CImg<> import(char* path){
+    static CImg<> import(const char* path){
         CImg<int> importedImage;
         try{
             importedImage = CImg<>(path);
@@ -57,6 +60,39 @@ public:
         }
         
         return importedImage;
+    }
+
+    /**
+     * Extract all the images from a directory and put them in images
+     * The directory has to contain only ".png" files
+     * @param path      Path of the directory
+     * @param images    Result vector of images
+     * @return          True if it is a success, False if it is not
+     */
+    static bool extract_images(const char* path, std::vector< CImg<>* >& images){
+        directory_iterator end_itr;
+        for(directory_iterator it(path); it != end_itr; ++it) { 
+            if(is_regular_file(it->status())) { //&& it->path().extension() == ".png"
+                // This is an image
+                CImg<>* image  = new CImg<>(import(it->path().string().c_str()));
+                images.push_back(image);
+            } else {
+                // There is a directory at this level
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Free pointers of the vector
+     * @param images Vector of pointers
+     */
+    static void delete_images(std::vector< CImg<>* > images) {
+        while (!images.empty()) {
+            free(images.back());
+            images.pop_back();
+        }
     }
     
     /**
@@ -75,6 +111,21 @@ public:
             
             (*it)->save(ss.str().c_str());
             index++;
+        }
+    }
+    
+    /**
+     * Same function for an array
+     * @param path
+     * @param list
+     * @param length
+     */
+    static void exportAll(const char* path, CImg<>* list, int length){
+        for(int index = 0; index < length; index ++){
+            // create file's name
+            std::stringstream ss;
+            ss << path << "_" << index << ".png";
+            list[index].save(ss.str().c_str());
         }
     }
     

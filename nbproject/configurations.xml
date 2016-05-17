@@ -50,6 +50,7 @@
       </toolsSet>
       <compileType>
         <ccTool>
+          <commandLine>-O3</commandLine>
         </ccTool>
         <linkerTool>
           <linkerAddLib>
@@ -71,7 +72,6 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
-
       <item path="Utils.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="clustering_data.cpp" ex="false" tool="1" flavor2="0">

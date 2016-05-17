@@ -50,8 +50,8 @@ TESTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-O3
+CXXFLAGS=-O3
 
 # Fortran Compiler Flags
 FFLAGS=

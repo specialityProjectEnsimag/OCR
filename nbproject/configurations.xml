@@ -5,7 +5,12 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>CImg.h</itemPath>
+<<<<<<< Updated upstream
       <itemPath>Utils.h</itemPath>
+=======
+      <itemPath>clustering_data.h</itemPath>
+      <itemPath>forecast.h</itemPath>
+>>>>>>> Stashed changes
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,12 +19,20 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>clustering_data.cpp</itemPath>
+      <itemPath>forecast.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f1"
+                     displayName="clustering_data"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/newsimpletest.cpp</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -41,10 +54,30 @@
       <compileType>
         <ccTool>
           <incDir>
+<<<<<<< Updated upstream
             <pElem>/usr/X11R6/lib</pElem>
           </incDir>
           <commandLine>-lm -lpthread -lX11</commandLine>
         </ccTool>
+=======
+            <pElem>/usr/include</pElem>
+            <pElem>/usr/local/include</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/include</pElem>
+          </linkerAddLib>
+          <linkerLibItems>
+            <linkerOptionItem>-lboost_system</linkerOptionItem>
+            <linkerOptionItem> -lboost_filesystem</linkerOptionItem>
+            <linkerOptionItem> -L/usr/X11R6/lib</linkerOptionItem>
+            <linkerOptionItem> -lm</linkerOptionItem>
+            <linkerOptionItem> -lpthread</linkerOptionItem>
+            <linkerOptionItem> -lX11</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+>>>>>>> Stashed changes
       </compileType>
       <item path=".gitignore" ex="false" tool="3" flavor2="0">
       </item>
@@ -52,9 +85,36 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
+<<<<<<< Updated upstream
       <item path="Utils.h" ex="false" tool="3" flavor2="0">
+=======
+      <item path="clustering_data.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clustering_data.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="forecast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="forecast.h" ex="false" tool="3" flavor2="0">
+>>>>>>> Stashed changes
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -83,9 +143,36 @@
       </item>
       <item path="README.md" ex="false" tool="3" flavor2="0">
       </item>
+<<<<<<< Updated upstream
       <item path="Utils.h" ex="false" tool="3" flavor2="0">
+=======
+      <item path="clustering_data.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clustering_data.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <folder path="TestFiles/f1">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <item path="forecast.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="forecast.h" ex="false" tool="3" flavor2="0">
+>>>>>>> Stashed changes
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/newsimpletest.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

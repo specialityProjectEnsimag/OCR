@@ -90,7 +90,7 @@ public:
      */
     static void delete_images(std::vector< CImg<>* > images) {
         while (!images.empty()) {
-            free(images.back());
+            delete images.back();
             images.pop_back();
         }
     }

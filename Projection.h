@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include "CImg.h"
+#include "Utils.h"
 #include <stdlib.h>
 
 using namespace cimg_library;
@@ -33,7 +34,7 @@ public:
         
         for(int h = 0; h < img._height; h++){
             int j = 0;
-            while(img(j,h) == 255 && j < img._width){
+            while(j < img._width && img(j,h) == 255){
                 sum.at(h) = sum.at(h) + 1 ;
                 j++;
             }
@@ -70,7 +71,7 @@ public:
         
         for(int w = 0; w < img._width; w++){
             int j = 0;
-            while(img(w, j) == 255 && j < img._height){
+            while(j < img._height && img(w, j) == 255){
                 sum.at(w) = sum.at(w) + 1 ;
                 j++;
             }
@@ -93,6 +94,110 @@ public:
             }
         }
         return img;
+    }
+ 
+    /**
+     * Give the first index of the vector which is not equal to 'value'. 
+     * If beginning is set to 'TRUE', index is computed from the beginning.
+     * If beginning is set to 'FALSE', index is computed from the end
+     * @param projection    Result of a projection on one axis
+     * @param value         Value
+     * @param beginning     TRUE = beginning, FALSE = end
+     * @return  The index of the first value non equal to 'value'
+     */
+    static int firstNonEqual(std::vector<int> projection, int value, bool beginning = true){
+        int index;
+        if(beginning){
+            int index = -1;
+            do{
+                index++;
+            }while(index < projection.size() && projection.at(index) == value);
+        }else{
+            index = projection.size();
+            do{
+                index--;
+            }while(index >= 0 && projection.at(index) == value);
+
+        }
+        
+        return index;
+    }
+    
+    /**
+     * Reduces the image to its core content. Remove all unecessary white borders
+     * @param img The image to reduce
+     * @return The same image without the white borders
+     */
+    static CImg<> reduce(CImg<> img){
+        vector<int> up = Projection::upward(img);
+        int upB = Projection::firstNonEqual(up, img._height);
+        int upE = Projection::firstNonEqual(up, img._height, false);
+
+        vector<int> left = Projection::leftward(img);
+        int leftB = Projection::firstNonEqual(left, img._width);
+        int leftE = Projection::firstNonEqual(left, img._width, false);
+
+        return img.crop(upB, leftB, upE, leftE);
+    }
+    
+    /**
+     *  Split the given text into lines 
+     * @param text      The text to split
+     * @param lines     The line extracted
+     */
+    static void splitLines(const CImg<>& text, std::vector< CImg<>* >& lines){
+        vector<int> sep = Projection::leftward(text);
+        
+        int state = 1; // 0: blank, 1: something
+        int beg = 0;
+        
+        int full = text._width;
+        sep.push_back(full);
+        for(int i = 0; i < sep.size(); i++){
+            if(state == 0){
+                if(sep.at(i) != full){
+                    beg = i;
+                    state = 1;
+                }
+            }else if(state == 1){
+                if(sep.at(i) == full){
+                    state = 0;
+                    CImg<>* elt = new CImg<>(text.get_crop(0, beg, full-1, i-1));
+                    lines.push_back(elt);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Given a line split into characters
+     * @param line         The line to split
+     * @param characters    List of characters found
+     */
+    static void splitCharacters(const CImg<>& line, std::vector< CImg<>* >& characters){
+        vector<int> sep = Projection::upward(line);
+
+        int state = 1; // 0: blank, 1: something
+        int beg = 0;
+
+        int full = line._height;
+        sep.push_back(full);
+        for(int i = 0; i < sep.size(); i++){
+            if(state == 0){
+                if(sep.at(i) != full){
+                    beg = i;
+                    state = 1;
+                }
+            }else if(state == 1){
+                if(sep.at(i) == full){
+                    state = 0;
+
+                    CImg<>* elt = new CImg<>(line.get_crop(beg, 0, i-1, full-1));
+                    //.resize(128, 128, 1, 1))
+                    characters.push_back(elt);
+                }
+            }
+        }
     }
     
 private:

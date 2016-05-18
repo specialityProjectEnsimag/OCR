@@ -41,7 +41,7 @@ class Forecast {
     public:
         Forecast(string average_dataset);
         Forecast(const Forecast& orig);
-        virtual ~Forecast(){};
+        virtual ~Forecast(){Utils::delete_images(images);};
         
         /**
          * Computes the probability of each images given in average for the image

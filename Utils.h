@@ -12,8 +12,9 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-
 #include <stdlib.h>
+
+#include "Projection.h"
 
 #include "boost/filesystem.hpp"
 #include "CImg.h"
@@ -75,6 +76,7 @@ public:
             if(is_regular_file(it->status())) { //&& it->path().extension() == ".png"
                 // This is an image
                 CImg<>* image  = new CImg<>(import(it->path().string().c_str()));
+                *image = Projection::reduce(*image).resize(128, 128);
                 images.push_back(image);
             } else {
                 // There is a directory at this level

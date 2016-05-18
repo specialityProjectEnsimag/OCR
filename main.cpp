@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     //cimg::exception_mode(0);
     
     cout << "Welcome !" << endl;
-    
+    kmeans("./dataset", "./result_dataset");
     if(argc < 2){
         cout << "Not enough arguments !" << endl;
         cout << "./main image.png" << endl;
@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
     int total = 0;
  
     CImg<> img = Utils::import(argv[1]);
-    
     CImg<> crop = Projection::reduce(img);
 
     vector< CImg<>* > split;
@@ -56,15 +55,26 @@ int main(int argc, char** argv) {
        Projection::splitCharacters(line, lines);
        cout << "\tCharacters: " << lines.size() << endl;
        total += lines.size();
+       Forecast f("./result_dataset");
        for(int j = 0; j < lines.size(); j++){
-           //Utils::displayImage(*lines.at(j));
+            *lines.at(j) = Projection::reduce(*lines.at(j)).resize(128,128);
+            Utils::displayImage(*lines.at(j));
+            std::vector<forecast_type>  res;
+            f.forecast(*lines.at(j), res);
+            std::vector<forecast_type>::iterator i = res.begin();
+            int nbr = 0;
+            while (i != res.end() && nbr < 10) {
+                std::cout << i->character << " : " << i->probability << endl;    
+                nbr++;
+                i++;
+            }
        }
        Utils::delete_images(lines);
     }
     Utils::delete_images(split);
     
     cout << "Total: " << total << endl;
-    
+
     return 0;
 }
 

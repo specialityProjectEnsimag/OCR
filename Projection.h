@@ -15,6 +15,7 @@
 #include <stdlib.h>
 
 using namespace cimg_library;
+using namespace std;
 
 class Projection {
 public:

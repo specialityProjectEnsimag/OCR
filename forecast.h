@@ -13,6 +13,9 @@
 #include <vector> 
 #include <math.h> 
 
+#include "Utils.h"
+#include "clustering_data.h"
+
 #include "boost/filesystem.hpp"
 #include "CImg.h"
 using namespace std;
@@ -22,24 +25,23 @@ using namespace boost::filesystem;
 struct forecast_type {
   double probability;
   char character;
-  bool operator<(const forecast_type& other) const { return other.probability < probability; }
+  bool operator>(const forecast_type& other) const { return other.probability < probability; }
 };
+
+/**
+ * Merge all contigus letter from the given list
+ * @param list
+ */
+static void mergeContiguous(vector<forecast_type>& list);
 
 class Forecast {
     vector< CImg<>* > images;
     vector< char > labels;
     
     public:
-        Forecast() {};
-        Forecast(const Forecast& orig){};
+        Forecast(string average_dataset);
+        Forecast(const Forecast& orig);
         virtual ~Forecast(){};
-        
-        /**
-         * Test the image and compute the most probable image
-         * @param average_dataset   The name of the dataset 
-         * @return                  The forecast sorted by probability
-         */
-        vector<forecast_type>* testLetter(CImg<> toTest, string average_dataset);
         
         /**
          * Computes the probability of each images given in average for the image
@@ -49,14 +51,12 @@ class Forecast {
          * @param length    The length of average and res
          * @return          The index of the most probable avergae image
          */
-        static int forecast(CImg<> image, vector< CImg<>* > average, vector<char> labels, vector<forecast_type>& res);
-
+        static int forecast(CImg<> image, vector<forecast_type>& res, vector< CImg<>* > average, vector<char> labels);
+        
         /**
-         * Merge all contigus letter from the given list
-         * @param list
+         * Computes the same vector but uses images and labels of the object
          */
-        static void mergeContiguous(vector<forecast_type>& list);
-
+        int forecast(CImg<> image, vector<forecast_type>& res);
 };
 #endif	/* FORECAST_H */
 

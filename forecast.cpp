@@ -1,6 +1,45 @@
-#include "clustering_data.h"
+#include "forecast.h"
 
-int Forecast::forecast(CImg<> image, std::vector< CImg<>* > average, std::vector<char> labels, std::vector<forecast_type>& res) {
+void mergeContiguous(std::vector<forecast_type>& list) {
+    std::vector<forecast_type>::iterator j = list.begin();
+    std::vector<forecast_type>::iterator i = ++list.begin();
+    while (i != list.end()) {
+        if (i->character == j->character) {
+            j->probability += i->probability;
+            i = list.erase(i);
+        } else {
+            j = i;
+            i++;
+        }
+    }
+}
+
+Forecast::Forecast(string average_dataset) {
+    path path(average_dataset); 
+    // If the directory does not exist
+    if(!exists(path)) { 
+        std::cout << "You have not compute Kmeans !" << std::endl;
+    } 
+
+    // Else the directory exists
+    if(is_directory(path)) {
+        for(directory_iterator it(path), end; it != end; ++it) { 
+            if(is_directory(it->status())) {
+                int k = images.size();
+                // We extract all images
+                if (!Utils::extract_images(it->path().string().c_str(), images)) {
+                    std::cout << "Your dataset is corrupted !" << std::endl;
+                }
+                k = images.size() - k;
+                for (int i = 0; i < k; i++) {
+                    labels.push_back(corresponding_label(it->filename()));
+                }
+            }
+        }
+    }
+}
+
+int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vector< CImg<>* > average, std::vector<char> labels) {
     int length = average.size();
     double probability[length];
     double max = 0;
@@ -34,58 +73,12 @@ int Forecast::forecast(CImg<> image, std::vector< CImg<>* > average, std::vector
     }
     
     // Sort res
-    std::sort(res.begin(), res.end());
+    std::sort(res.begin(), res.end(), greater<forecast_type>());
     mergeContiguous(res);
     
     return min;
 }
 
-std::vector<forecast_type>* Forecast::testLetter(CImg<> toTest, string average_dataset) {
-    path path(average_dataset); 
-    std::vector<forecast_type>* res = new std::vector<forecast_type>();
- 
-    // If the directory does not exist
-    if(!exists(path)) { 
-        std::cout << "You have not compute Kmeans !" << std::endl;
-        return res;
-    } 
-
-    // Else the directory exists
-    if(is_directory(path)) {
-        for(directory_iterator it(path), end; it != end; ++it) { 
-            if(is_directory(it->status())) {
-                int k = images.size();
-                // We extract all images
-                if (!Utils::extract_images(it->path().string().c_str(), images)) {
-                    std::cout << "Your dataset is corrupted !" << std::endl;
-                    return res;
-                }
-                k = images.size() - k;
-                for (int i = 0; i < k; i++) {
-                    labels.push_back(corresponding_label(it->filename()));
-                }
-            } else {
-                return res;
-            }
-        }
-    }
-    
-    // Computes the res
-    forecast(toTest, images, labels, *res);
-    
-    return res;
-}
-
-void Forecast::mergeContiguous(std::vector<forecast_type>& list) {
-    std::vector<forecast_type>::iterator j = list.begin();
-    std::vector<forecast_type>::iterator i = ++list.begin();
-    while (i != list.end()) {
-        if (i->character == j->character) {
-            j->probability += i->probability;
-            i = list.erase(i);
-        } else {
-            j = i;
-            i++;
-        }
-    }
+int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res) {
+    forecast(image, res, this->images, this->labels);
 }

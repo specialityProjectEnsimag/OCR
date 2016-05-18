@@ -22,8 +22,6 @@ using namespace std;
 using namespace cimg_library;
 using namespace boost::filesystem;
 
-#define NUMBER_OF_SAMPLE 62
-
 /**
  * Computes the Kmeans algorithm on all the images from the directory into
  * k images in the average dataset

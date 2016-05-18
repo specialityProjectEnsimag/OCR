@@ -115,21 +115,6 @@ public:
     }
     
     /**
-     * Same function for an array
-     * @param path
-     * @param list
-     * @param length
-     */
-    static void exportAll(const char* path, CImg<>* list, int length){
-        for(int index = 0; index < length; index ++){
-            // create file's name
-            std::stringstream ss;
-            ss << path << "_" << index << ".png";
-            list[index].save(ss.str().c_str());
-        }
-    }
-    
-    /**
      * Given a list of images, returns the average image. All images must have
      * the same dimensions.
      * @param list  Images

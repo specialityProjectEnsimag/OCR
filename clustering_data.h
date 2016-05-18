@@ -22,15 +22,18 @@ using namespace std;
 using namespace cimg_library;
 using namespace boost::filesystem;
 
+#define NUMBER_OF_SAMPLE 62
+
 /**
  * Computes the Kmeans algorithm on all the images from the directory into
  * k images in the average dataset
  * @param images            The images of the directory
+ * @param label             The letter corresponding to the directory
  * @param k                 The number of needed average images
  * @param iteration         The number of iterations of the algorithm
  * @param average_dataset   The target directory
  */
-void kmeans_directory(vector< CImg<>* >& images, int k, int iteration, string average_dataset);
+void kmeans_directory(vector< CImg<>* >& images, char label, int k, int iteration, string average_dataset);
 
 /**
  * Computes the kmeans on the dataset and creates average images in the 
@@ -41,6 +44,13 @@ void kmeans_directory(vector< CImg<>* >& images, int k, int iteration, string av
  * @param average_dataset   The target directory
  * @return                  True if it is a success, False otherwise
  */
-bool kmeans(string dataset, string average_dataset, int k = 10, int iteration = 50);
+bool kmeans(string dataset, string average_dataset, int k = 50, int iteration = 50);
+
+/**
+ * Gives the corresponding label
+ * @param file  The name of the directory
+ * @return      The corresponding label
+ */
+char corresponding_label(string dir);
 
 #endif

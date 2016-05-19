@@ -5,3 +5,4 @@ dist/
 nbdist/
 nbactions.xml
 dataset/
+result_dataset/

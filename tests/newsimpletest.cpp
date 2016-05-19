@@ -17,9 +17,6 @@ void directoryDoesNotExist() {
     assert(!kmeans("NotExist","NotExistToo"));
 }
 
-void directoryExistButNoDirectory() {
-}
-
 void targetWithSameName() {
     assert(kmeans("dataset", "dataset"));
 }
@@ -30,6 +27,7 @@ void realTest() {
 
 int main(int argc, char** argv) {
     directoryDoesNotExist();
+    targetWithSameName();
     realTest();
 
     return (EXIT_SUCCESS);

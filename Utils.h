@@ -124,13 +124,27 @@ public:
      * @param list  Images
      * @return      Average images of all images
      */
-    static CImg<int> average(std::vector< CImg<>* > list){
-        CImg<int> res(*list.at(0));
+    static CImg<> average(std::vector< CImg<>* > list){
+        CImg<> res(*list.at(0));
         for(std::vector< CImg<>* >::iterator it = (++list.begin()); it != list.end(); it++){
             res += (**it);
         }
         return res / list.size();
     }
+    
+    /**
+     * Computes the binarization of otsu 
+     * @param src   Image in grayscale
+     * @return      Binarized image
+     */
+    static CImg<> otsu_binarization(CImg<> src);
+    
+    /**
+     * Delete pixels of noise
+     * @param src   Image in grayscale
+     * @return      Binarized image
+     */
+    static CImg<> smooth(CImg<> src);
     
 private:
 

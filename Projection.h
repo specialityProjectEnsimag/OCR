@@ -109,7 +109,7 @@ public:
     static int firstNonEqual(std::vector<int> projection, int value, bool beginning = true){
         int index;
         if(beginning){
-            int index = -1;
+            index = -1;
             do{
                 index++;
             }while(index < projection.size() && projection.at(index) == value);

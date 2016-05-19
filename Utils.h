@@ -9,6 +9,8 @@
 #ifndef UTILS_H
 #define	UTILS_H
 
+#define SQUARE 64
+
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -76,7 +78,7 @@ public:
             if(is_regular_file(it->status())) { //&& it->path().extension() == ".png"
                 // This is an image
                 CImg<>* image  = new CImg<>(import(it->path().string().c_str()));
-                *image = Projection::reduce(*image).resize(128, 128);
+                *image = Projection::reduce(*image).resize(SQUARE, SQUARE);
                 images.push_back(image);
             } else {
                 // There is a directory at this level

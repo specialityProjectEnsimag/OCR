@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
        total += lines.size();
        Forecast f("./result_dataset");
        for(int j = 0; j < lines.size(); j++){
-            *lines.at(j) = Projection::reduce(*lines.at(j)).resize(128,128);
+            *lines.at(j) = Projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE);
             Utils::displayImage(*lines.at(j));
             std::vector<forecast_type>  res;
             f.forecast(*lines.at(j), res);

@@ -63,7 +63,6 @@ int threshold(CImg<> img) {
 CImg<> Utils::otsu_binarization(CImg<> src) {
     CImg<> binarized(src);
     int lvl = threshold(src);
-    
     cimg_forXY(src, x, y) {
         binarized(x, y, 0, 0) = src(x, y, 0, 0) > lvl ? 255 : 0;
     }
@@ -71,15 +70,58 @@ CImg<> Utils::otsu_binarization(CImg<> src) {
     return binarized;
 }
 
-CImg<> Utils::smooth(CImg<> src) {    
-    CImg<> smoothed (src);
+CImg<> Utils::linear_filter(CImg<> src, CImg<> mask) {    
+    CImg<> smoothed(src);
     
     CImg<> Neight(3,3);
     cimg_for3x3(src,x,y,0,0,Neight,float) {
-        smoothed (x, y, 0, 0) = Neight.sum()/(3*3);
+        smoothed(x, y, 0, 0) = Neight.get_mul(mask).sum()/(mask.sum());
     }
     
-    return smoothed ;
+    return smoothed;
+}
+
+CImg<> Utils::noise(CImg<> src) {
+    CImg<> clean (src);
+    clean.mirror('x');
+    clean.mirror('y');
+    CImg<> Neight(3,3);
+    bool change = true;
+    int tour = 0 ;
+    //while (change) {
+        change = false;
+        CImg<> tmp(clean);
+        cimg_for3x3(tmp,x,y,0,0,Neight,float) {
+            float P2 = Neight(1,0,0,0);
+            float P3 = Neight(2,0,0,0);
+            float P4 = Neight(2,1,0,0);
+            float P5 = Neight(2,2,0,0);
+            float P6 = Neight(2,1,0,0);
+            float P7 = Neight(2,0,0,0);
+            float P8 = Neight(1,0,0,0);
+            float P9 = Neight(0,0,0,0);
+            // P2 = P3 = P4 = P5 = P6
+            if (P2 == P3 && P3 == P4 && P4 == P5 && P5 == P6) {
+                clean(x,y,0,0) = P2;
+                change = true;
+            // P4 = P5 = P6 = P7 = P8
+            } else if (P4 == P5 && P5 == P6 && P6 == P7 && P7 == P8) {
+                clean(x,y,0,0) = P4;
+                change = true;
+            // P6 = P7 = P8 = P9 = P2
+            } else if (P6 == P7 && P7 == P8 && P8 == P9 && P9 == P2) {
+                clean(x,y,0,0) = P6;
+                change = true;
+            // P8 = P9 = P2 = P3 = P4
+            } else if (P8 == P9 && P9 == P2 && P2 == P3 && P3 == P4) {
+                clean(x,y,0,0) = P8;
+                change = true;
+            }
+        }
+    //}
+    clean.mirror('x');
+    clean.mirror('y');
+    return clean;
 }
 
 /**

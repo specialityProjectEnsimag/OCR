@@ -14,6 +14,29 @@ void mergeContiguous(std::vector<forecast_type>& list) {
     }
 }
 
+double dist (CImg<> src, CImg<> average) {
+    #ifdef EUCLIDEAN
+        double res = 0;
+        cimg_forXY(src,x,y) {
+            if (src(x,y) == 0) {
+                double min = 0;
+                cimg_forXY(average,u,v) {
+                    if (average(u,v) == 0) {
+                        double tmp = sqrt(pow((u-x),2)+ pow((v-y),2));
+                        if (tmp < min) {
+                            min = tmp;
+                        }
+                    }
+                }
+                res += min;
+            }
+        }
+        return res;
+    #else
+        return src.MSE(average);
+    #endif
+}
+
 Forecast::Forecast(string average_dataset) {
     path path(average_dataset); 
     // If the directory does not exist
@@ -45,7 +68,7 @@ int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vecto
     double max = 0;
     memset(probability, 0, length*sizeof(double));
     for (int i = 0; i < length; i++) {
-        probability[i] = image.MSE(*average.at(i));
+        probability[i] = dist(image, *average.at(i));
         if (probability[i] > max) {
             max = probability[i];
         }

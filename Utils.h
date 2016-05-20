@@ -87,7 +87,7 @@ public:
         }
         return true;
     }
-
+    
     /**
      * Free pointers of the vector
      * @param images Vector of pointers
@@ -112,7 +112,6 @@ public:
             // create file's name
             std::stringstream ss;
             ss << path << "_" << index << ".png";
-            
             (*it)->save(ss.str().c_str());
             index++;
         }
@@ -133,6 +132,29 @@ public:
     }
     
     /**
+     * Modifies the image with noise correction, squeletization and filters
+     * @param image Image to modify
+     */
+    static void preprocessing(CImg<>& image){
+        image = otsu_binarization(image);
+        image = skeletonization(image);
+        float tab[9] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+        CImg<> mask(tab,3,3);
+        image = linear_filter(image, mask);
+        image = otsu_binarization(image);
+    }
+    
+    /**
+     * Modifies all images with filters and skeletonisation
+     * @param images    Vector of images to modify
+     */
+    static void preprocessing(std::vector< CImg<>* >& images){
+        for(vector< CImg<>* >::iterator it = images.begin(); it != images.end(); ++it) { 
+            preprocessing(**it);
+        }
+    }
+    
+    /**
      * Computes the binarization of otsu 
      * @param src   Image in grayscale
      * @return      Binarized image
@@ -140,11 +162,22 @@ public:
     static CImg<> otsu_binarization(CImg<> src);
     
     /**
-     * Delete pixels of noise
+     * Apply a filter on each neighborhood
      * @param src   Image in grayscale
-     * @return      Binarized image
+     * @param mask  Mask to apply on the neighborhood (must be a 3x3 matrix)
+     *              Example :
+     *                  float tab[9] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+     *                  CImg<> mask(tab,3,3);
+     * @return      Image with the applied mask
      */
-    static CImg<> smooth(CImg<> src);
+    static CImg<> linear_filter(CImg<> src, CImg<> mask);
+    
+    /**
+     * Fill blanks and reduce noisy black and white image
+     * @param src   Image in black and white
+     * @return      Cleaner image
+     */
+    static CImg<> noise(CImg<> src);
     
     /**
      * Create the squeleton of the image using the Hilditch's Algorithm

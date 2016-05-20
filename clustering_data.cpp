@@ -6,8 +6,8 @@ void kmeans_directory(std::vector< CImg<>* >& images, char label, int k, int ite
     
     // Initialisation of the average vector 
     for (int i = 0; i < k; i++) {
-        // TODO : Random Choose of images
-        average.push_back(images.at(i));
+        // Random Choose of images
+        average.push_back(images.at(rand()%images.size()));
         labels.push_back(label);
     }
         
@@ -65,6 +65,7 @@ bool kmeans(string dataset, string average_dataset, int k, int iteration) {
                             // We extract all images
                             if (Utils::extract_images(path.c_str(), images)) {
                                 // We compute the final average images
+                                Utils::preprocessing(images);
                                 string file = average_dataset + "/" +filename + "/" + (filename);
                                 kmeans_directory(images, corresponding_label(filename), k, iteration, file);
                             }

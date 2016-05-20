@@ -35,7 +35,7 @@ public:
      * @param title Optionnal title for the window
      */
     static void displayImage(CImg<>& img, const char* title = "Beautiful image"){
-        CImgDisplay main_disp(img, title);
+        CImgDisplay main_disp(img, title,0);
         while (!main_disp.is_closed()){
             main_disp.wait();
         }
@@ -145,6 +145,13 @@ public:
      * @return      Binarized image
      */
     static CImg<> smooth(CImg<> src);
+    
+    /**
+     * Create the squeleton of the image using the Hilditch's Algorithm
+     * @param src   Image in black and white
+     * @return      Skeletonized image
+     */
+    static CImg<> skeletonization(CImg<> src);
     
 private:
 

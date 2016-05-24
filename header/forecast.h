@@ -13,7 +13,7 @@
 #include <vector> 
 #include <math.h> 
 
-#include "Utils.h"
+#include "image_io.h"
 #include "clustering_data.h"
 
 #include "boost/filesystem.hpp"
@@ -22,17 +22,15 @@ using namespace std;
 using namespace cimg_library;
 using namespace boost::filesystem;
 
+// Best experimental value
+#define NUMBERNEIGHT 3
+
 struct forecast_type {
   double probability;
   char character;
   bool operator>(const forecast_type& other) const { return other.probability < probability; }
+  bool operator<(const forecast_type& other) const { return other.probability > probability; }
 };
-
-/**
- * Merge all contigus letter from the given list
- * @param list
- */
-static void mergeContiguous(vector<forecast_type>& list);
 
 class Forecast {
     vector< CImg<>* > images;
@@ -41,7 +39,7 @@ class Forecast {
     public:
         Forecast(string average_dataset);
         Forecast(const Forecast& orig);
-        virtual ~Forecast(){Utils::delete_images(images);};
+        virtual ~Forecast(){image_io::delete_images(images);};
         
         /**
          * Computes the probability of each images given in average for the image
@@ -52,11 +50,13 @@ class Forecast {
          * @return          The index of the most probable avergae image
          */
         static int forecast(CImg<> image, vector<forecast_type>& res, vector< CImg<>* > average, vector<char> labels);
-        
+       
         /**
          * Computes the same vector but uses images and labels of the object
          */
-        int forecast(CImg<> image, vector<forecast_type>& res);
+        int forecast(CImg<> image, vector<forecast_type>& res){
+            forecast(image, res, this->images, this->labels);
+        }
 };
 #endif	/* FORECAST_H */
 

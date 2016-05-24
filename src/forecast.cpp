@@ -1,5 +1,9 @@
 #include "forecast.h"
 
+/**
+ * Merge all contigus letter from the given list
+ * @param list
+ */
 void mergeContiguous(std::vector<forecast_type>& list) {
     std::vector<forecast_type>::iterator j = list.begin();
     std::vector<forecast_type>::iterator i = ++list.begin();
@@ -15,7 +19,7 @@ void mergeContiguous(std::vector<forecast_type>& list) {
 }
 
 double dist (CImg<> src, CImg<> average) {
-    #ifdef EUCLIDEAN
+    #ifdef EUCLIDEANDISTANCE
         double res = 0;
         cimg_forXY(src,x,y) {
             if (src(x,y) == 0) {
@@ -33,7 +37,12 @@ double dist (CImg<> src, CImg<> average) {
         }
         return res;
     #else
-        return src.MSE(average);
+        #ifdef CHAMFER
+            // Higher the result will be, closest are the images
+            return -chamfer::bin(src).get_mul(average).sum();
+        #else 
+            return src.MSE(average);
+        #endif
     #endif
 }
 
@@ -49,8 +58,8 @@ Forecast::Forecast(string average_dataset) {
         for(directory_iterator it(path), end; it != end; ++it) { 
             if(is_directory(it->status())) {
                 int k = images.size();
-                // We extract all images
-                if (!Utils::extract_images(it->path().string().c_str(), images)) {
+                // We extract all images WITHOUT ANY PREPROCESSING
+                if (!image_io::extract_images(it->path().string().c_str(), images)) {
                     std::cout << "Your dataset is corrupted !" << std::endl;
                 }
                 k = images.size() - k;
@@ -62,6 +71,59 @@ Forecast::Forecast(string average_dataset) {
     }
 }
 
+#ifdef KNN
+int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vector< CImg<>* > average, std::vector<char> labels) {
+    int length = average.size();
+
+    std::vector<forecast_type> tmp;
+    
+    for (int i = 0; i < length; i++) {
+        double proba = dist(image, *average.at(i));
+        forecast_type obj;
+        obj.probability = proba;
+        obj.character = labels[i];
+        tmp.push_back(obj);
+    }
+    
+    std::sort(tmp.begin(), tmp.end(), less<forecast_type>());
+
+    std::vector<forecast_type>::iterator i = tmp.begin();
+    int index = 0;
+    int min = 0;
+    int sameNeight = 0;
+    // Compute the KNN
+    while (i != tmp.end() && sameNeight < NUMBERNEIGHT) {
+        std::vector<forecast_type>::iterator j = res.begin();
+        while (j != res.end()) {
+            if (j->character == i->character) {
+                j->probability += 1;
+                sameNeight = j->probability;
+                min = index;
+                break;
+            } else {
+                j++;
+            }
+        }
+        if (j == res.end()) {
+            forecast_type obj;
+            obj.probability = 1;
+            obj.character = i->character;
+            res.push_back(obj);
+        }
+        i++;
+        index ++;
+    }
+    
+    std::sort(res.begin(), res.end(), greater<forecast_type>());
+    
+    for (vector<forecast_type>::iterator it = res.begin(); it != res.end(); ++it) {
+        it->probability /= index;
+    }
+    
+    return min;
+}
+
+#else
 int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vector< CImg<>* > average, std::vector<char> labels) {
     int length = average.size();
     double probability[length];
@@ -74,7 +136,9 @@ int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vecto
         }
     }
     
+    
     // Computes softmax in order to have probability
+    // of the NUMBERLETTER first recognized letter
     // Normalization to have small numbers
     double sum = 0;
     for (int i = 0; i < length; i++) {
@@ -101,7 +165,4 @@ int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res, std::vecto
     
     return min;
 }
-
-int Forecast::forecast(CImg<> image, std::vector<forecast_type>& res) {
-    forecast(image, res, this->images, this->labels);
-}
+#endif

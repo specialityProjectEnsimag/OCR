@@ -14,7 +14,8 @@
 #include <iterator>
 
 #include "forecast.h"
-#include "Utils.h"
+#include "image_io.h"
+#include "preprocessing.h"
 
 #include "boost/filesystem.hpp"
 #include "CImg.h"

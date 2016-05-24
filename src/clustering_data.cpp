@@ -7,7 +7,8 @@ void kmeans_directory(std::vector< CImg<>* >& images, char label, int k, int ite
     // Initialisation of the average vector 
     for (int i = 0; i < k; i++) {
         // Random Choose of images
-        average.push_back(images.at(rand()%images.size()));
+        CImg<>* tmp = new CImg<>(*images.at(rand()%images.size()));
+        average.push_back(tmp);
         labels.push_back(label);
     }
         
@@ -23,12 +24,13 @@ void kmeans_directory(std::vector< CImg<>* >& images, char label, int k, int ite
         // Compute the average of the new images
         for (int j = 0; j < k; j++) {
             if (predicted_class[j].size() != 0) {
-                *average[j] = Utils::average(predicted_class[j]);
+                *average[j] = image_io::average(predicted_class[j]);
             }
         }
     }
     // Save images
-    Utils::exportAll(average_dataset.c_str(), average);
+    image_io::exportAll(average_dataset.c_str(), average);
+    image_io::delete_images(average);
 }
 
 bool kmeans(string dataset, string average_dataset, int k, int iteration) {
@@ -63,14 +65,14 @@ bool kmeans(string dataset, string average_dataset, int k, int iteration) {
                             vector< CImg<>* > images;
 
                             // We extract all images
-                            if (Utils::extract_images(path.c_str(), images)) {
+                            if (image_io::extract_images(path.c_str(), images)) {
                                 // We compute the final average images
-                                Utils::preprocessing(images);
+                                preprocessing::preprocessing(images);
                                 string file = average_dataset + "/" +filename + "/" + (filename);
                                 kmeans_directory(images, corresponding_label(filename), k, iteration, file);
                             }
                             // Free images
-                            Utils::delete_images(images);
+                            image_io::delete_images(images);
                         }
                     }
                     it++;

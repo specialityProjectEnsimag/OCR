@@ -45,18 +45,28 @@ class Forecast {
          * Computes the probability of each images given in average for the image
          * @param image     The image that we study
          * @param average   The different average images to compare
+         * @param labels   The labels of the different average
          * @param res       The result of the computing
-         * @param length    The length of average and res
-         * @return          The index of the most probable avergae image
+         * @param dist      The ditance to use
          */
-        static int forecast(CImg<> image, vector<forecast_type>& res, vector< CImg<>* > average, vector<char> labels);
-       
+        static void forecast(const CImg<>& image, vector<forecast_type>& res, const vector< CImg<>* >& average, const vector<char>& labels,double (*dist)(CImg<>, CImg<>));
+
         /**
          * Computes the same vector but uses images and labels of the object
          */
-        int forecast(CImg<> image, vector<forecast_type>& res){
-            forecast(image, res, this->images, this->labels);
+        void forecast(const CImg<>& image, vector<forecast_type>& res, double (*dist)(CImg<>, CImg<>)){
+            forecast(image, res, this->images, this->labels, dist);
         }
+        
+        /**
+         * Computes the most probable image 
+         * @param image     The image that we study
+         * @param average   The different average images to compare
+         * @param dist      The ditance to use
+         * @return          The index of the closest average image
+         */
+        static int indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(CImg<>, CImg<>));
+        
 };
 #endif	/* FORECAST_H */
 

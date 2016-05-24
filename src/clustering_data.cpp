@@ -1,23 +1,20 @@
 #include "clustering_data.h"
 
-void kmeans_directory(std::vector< CImg<>* >& images, char label, int k, int iteration, string average_dataset) {
+void kmeans_directory(std::vector< CImg<>* >& images, int k, int iteration, string average_dataset) {
     vector < CImg<>* > average;
-    vector < char > labels;
     
     // Initialisation of the average vector 
     for (int i = 0; i < k; i++) {
-        // Random Choose of images
+        // Random Choose of images with copy
         CImg<>* tmp = new CImg<>(*images.at(rand()%images.size()));
         average.push_back(tmp);
-        labels.push_back(label);
     }
         
     for (int i = 0; i < iteration; i++) {
         vector< CImg<>* > predicted_class[k];
         for (vector< CImg<>* >::iterator it = images.begin(); it != images.end(); ++it) {
-            vector< forecast_type > res;
             // We compute the best categorie
-            int indice = Forecast::forecast(**it, res, average, labels);
+            int indice = Forecast::indexOfClosest(**it, average, MSE);
             predicted_class[indice].push_back(*it);
         }
         
@@ -69,7 +66,7 @@ bool kmeans(string dataset, string average_dataset, int k, int iteration) {
                                 // We compute the final average images
                                 preprocessing::preprocessing(images);
                                 string file = average_dataset + "/" +filename + "/" + (filename);
-                                kmeans_directory(images, corresponding_label(filename), k, iteration, file);
+                                kmeans_directory(images, k, iteration, file);
                             }
                             // Free images
                             image_io::delete_images(images);

@@ -211,14 +211,16 @@ namespace preprocessing
     
      void preprocessing(CImg<>& image){
         image = otsu_binarization(image);
-        image = skeletonization(image);
-        #ifdef CHAMFER
-            image = chamfer::chamfer(image);
-        #else
-            float tab[9] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
-            CImg<> mask(tab,3,3);
-            image = linear_filter(image, mask);
-            image = otsu_binarization(image);
+        #ifdef SKELETONIZATION
+            image = skeletonization(image);
+            #ifdef CHAMFER
+                image = chamfer::chamfer(image);
+            #else
+                float tab[9] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+                CImg<> mask(tab,3,3);
+                image = linear_filter(image, mask);
+                image = otsu_binarization(image);
+            #endif
         #endif
     }
 

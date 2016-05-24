@@ -16,6 +16,7 @@
 #include "forecast.h"
 #include "image_io.h"
 #include "preprocessing.h"
+#include "distance.h"
 
 #include "boost/filesystem.hpp"
 #include "CImg.h"
@@ -27,12 +28,11 @@ using namespace boost::filesystem;
  * Computes the Kmeans algorithm on all the images from the directory into
  * k images in the average dataset
  * @param images            The images of the directory
- * @param label             The letter corresponding to the directory
  * @param k                 The number of needed average images
  * @param iteration         The number of iterations of the algorithm
  * @param average_dataset   The target directory
  */
-void kmeans_directory(vector< CImg<>* >& images, char label, int k, int iteration, string average_dataset);
+void kmeans_directory(vector< CImg<>* >& images, int k, int iteration, string average_dataset);
 
 /**
  * Computes the kmeans on the dataset and creates average images in the 

@@ -19,7 +19,8 @@ using namespace std;
 using namespace cimg_library;
 
 #include "overlappingSegmentation.h"
-#include "Utils.h"
+#include "image_io.h"
+#include "preprocessing.h"
 using namespace overlappingSegmentation;
 
 #define FOLDER "./overlapping/"
@@ -44,7 +45,7 @@ bool areEquals(sol path, const sol expected){
 
 #ifdef PRINT_DEBUG
     #define displayIfDebug(img){                        \
-            Utils::displayImage(img.resize(300, 300));  \
+            image_io::displayImage(img.resize(300, 300));  \
     }
 
     #define initTrace(img) colored = CImg<>(img);
@@ -153,7 +154,7 @@ void testMoveTopTopAndRight(){
 
 
 void testNoPathTopTopRightButToLeft(){
-    CImg<>img = Utils::otsu_binarization(CImg<>(FOLDER "no_path_to_right_but_to_left.png"));
+    CImg<>img = preprocessing::otsu_binarization(CImg<>(FOLDER "no_path_to_right_but_to_left.png"));
     initTrace(img);
     sol res = {false, -1, -1, -1, -1};                          
     vector<int> solution = vector<int>(img._height, -1);
@@ -214,7 +215,7 @@ void testMoveTopTopSided(){
     assert(res.found);
 
     
-    img = Utils::otsu_binarization(CImg<>(FOLDER "no_path.png"));
+    img = preprocessing::otsu_binarization(CImg<>(FOLDER "no_path.png"));
     initTrace(img);
     res = {false, -1, -1, -1, -1};                          
     solution = vector<int>(img._height, -1);    
@@ -358,7 +359,7 @@ void testMoveBottomBottomAndLeft(){
 
 
 void testNoPathBottomBottomLeftButToRight(){
-    CImg<>img = Utils::otsu_binarization(CImg<>(FOLDER "no_path_to_right_but_to_left.png"));
+    CImg<>img = preprocessing::otsu_binarization(CImg<>(FOLDER "no_path_to_right_but_to_left.png"));
     img.rotate(180.0);
     initTrace(img);
     
@@ -420,7 +421,7 @@ void testMoveBottomBottomSided(){
     assert(res.found);
 
     
-    img = Utils::otsu_binarization(CImg<>(FOLDER "no_path.png"));
+    img = preprocessing::otsu_binarization(CImg<>(FOLDER "no_path.png"));
     img.rotate(180.0);    
     initTrace(img);
     res = {false, -1, -1, -1, -1};                          

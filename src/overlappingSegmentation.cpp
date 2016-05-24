@@ -333,5 +333,32 @@ namespace overlappingSegmentation
             path = {false, path.lx, path.ly, x - 1, y};
         }
     }
+    
+    void splitCharLine(const CImg<>& image, CImg<>& left, CImg<>& right, int* line){
+        int index = 0;
+        cimg_forY(image, y) {
+            cimg_forX(image, x) {
+                if (x < line[index]) {
+                    left(x,y) = image(x,y);
+                    right(x,y) = WHITE_PIXEL;
+                } else {
+                    left(x,y) = WHITE_PIXEL;
+                    right(x,y) = image(x,y);
+                }
+            }
+            index ++;
+        }
+        right = projection::reduce(right);
+        left = projection::reduce(left);
+    }
+
+    bool stop(const CImg<>& image){
+        cimg_forXY(image, x, y) {
+            if (image(x,y) != WHITE_PIXEL) {
+                return false;
+            }  
+        }
+        return true;
+    }
 }
 

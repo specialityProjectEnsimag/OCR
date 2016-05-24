@@ -34,7 +34,7 @@
 #ifndef OVERLAPPINGSEGMENTATION_H
 #define	OVERLAPPINGSEGMENTATION_H
 
-#include "Utils.h"
+#include "image_io.h"
 #include <vector>
 
 #include "CImg.h"
@@ -183,6 +183,24 @@ namespace overlappingSegmentation
      * @param solution
      */
     void moveBottomRightUntil(const CImg<>& img, sol& path, int x, int y, int destX, const vector<int>& solution);
+    
+    /**
+     * Divides the source image into two subimages following the line
+     * of x coordinates (from top to buttom)
+     * @param image Source images
+     * @param left  The left sub image
+     * @param right The right sub image
+     * @param line  The cutting line which divides the image
+     */
+    void splitCharLine(const CImg<>& image, CImg<>& left, CImg<>& right, int* line);
+
+    /**
+     * Returns if an image is empty (ie white)
+     * @param image Source image
+     * @return True if the image has notgot any unwhite pixel
+     *         False otherwise
+     */
+    bool stop(const CImg<>& image);
 }
 
 #endif	/* OVERLAPPINGSEGMENTATION_H */

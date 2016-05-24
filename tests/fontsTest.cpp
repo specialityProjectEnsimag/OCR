@@ -9,11 +9,11 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
-#include "Utils.h"
+#include "image_io.h"
 #include "clustering_data.h"
 #include "CImg.h"
 
-#include "Projection.h"
+#include "projection.h"
 #include "forecast.h"
 
 #include "boost/filesystem.hpp"
@@ -24,7 +24,7 @@ using namespace boost::filesystem;
 using namespace cimg_library;
 using namespace std;
 
-#define FONTS_DIR "./fonts/"
+#define FONTS_DIR ".Images_Tests/fonts/"
 #define NB_CHARACTER 62
 #define NB_CHARACTER_PER_LINE 10
 int totalCharacter;
@@ -111,15 +111,17 @@ void checkString (string check, string expected){
 string analyse(const char* path, Forecast* f){
     std::stringstream output;
     
-    CImg<> img = Utils::import(path);
-    CImg<> crop = Projection::reduce(img); 
+    CImg<> img = image_io::import(path);
+    CImg<> crop = projection::reduce(img); 
 
+    //image_io::preprocessing(img);
+    
     vector< CImg<>* > split;
-    Projection::splitLines(crop, split);    
+    projection::splitLines(crop, split);    
 
     for(int i = 0; i < split.size(); i++){
        vector< CImg<>* > lines;
-       CImg<> line = Projection::reduce(*split.at(i));
+       CImg<> line = projection::reduce(*split.at(i));
        
        // in order to temporary remove unwanted little pixel
        // will be done with a preprocessing part later
@@ -127,31 +129,21 @@ string analyse(const char* path, Forecast* f){
            cout << "\t Too small" << endl;
            continue;
        }
-       Projection::splitCharacters(line, lines);
+       projection::splitCharacters(line, lines);
 
 
        for(int j = 0; j < lines.size(); j++){
-            *lines.at(j) = Projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE);
+            *lines.at(j) = projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE);
             std::vector<forecast_type>  res;
             f->forecast(*lines.at(j), res);
             std::vector<forecast_type>::iterator i = res.begin();
             output << i->character;
        }
-       Utils::delete_images(lines);
+       image_io::delete_images(lines);
     }
-    Utils::delete_images(split);
+    image_io::delete_images(split);
     
     return output.str();
-}
-
-
-void test1() {
-    std::cout << "newsimpletest1 test 1" << std::endl;
-}
-
-void test2() {
-    std::cout << "newsimpletest1 test 2" << std::endl;
-    std::cout << "%TEST_FAILED% time=0 testname=test2 (newsimpletest1) message=error message sample" << std::endl;
 }
 
 /**
@@ -177,13 +169,24 @@ void checkfont(Forecast* f){
     }
 
     displayStats();
+    
+    for(directory_iterator it(path); it != end_itr; ++it) { 
+        cout << endl << "File    : " << it->path().filename() << endl;
+        std::stringstream filePath;
+
+        string res = analyse(it->path().string().c_str(), f);
+        checkString(res, check);   
+        
+    }
+
+    displayStats();
 }
 
 int main(int argc, char** argv) {
     cout << "Test Character recognition on fonts" << endl;
     
     cout << "Loading OCR ..." << endl;    
-    Forecast* f = new Forecast("./result_dataset");
+    Forecast* f = new Forecast("./--result_dataset");
     cout << "End loading !" << endl;
     
     checkfont(f);

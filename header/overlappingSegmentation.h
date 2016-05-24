@@ -75,7 +75,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveToTop(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveToTop(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
     
     /**
      * Move along x axis on the given y to the left and always try to go up.
@@ -88,7 +88,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveTopLeft(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveTopLeft(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
     
     /**
      * Move along x axis on the given y to the right and always try to go up.
@@ -101,7 +101,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveTopRight(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveTopRight(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
     
     /**
      * Same as moveToLeft but it does not look for a way up before (destX, y), then calls
@@ -114,7 +114,7 @@ namespace overlappingSegmentation
      * @param destX
      * @param solution
      */
-    void moveTopLeftUntil(const CImg<>& img, sol& path, int x, int y, int destX, const vector<int>& solution);
+    void moveTopLeftUntil(const CImg<>& img, sol& path, int x, int y, int destX, vector<int>& solution);
     
     /**
      * Same as moveToRight but it does not look for a way up before (destX, y), then calls
@@ -127,7 +127,7 @@ namespace overlappingSegmentation
      * @param destX
      * @param solution
      */
-    void moveTopRightUntil(const CImg<>& img, sol& path, int x, int y, int destX, const vector<int>& solution);
+    void moveTopRightUntil(const CImg<>& img, sol& path, int x, int y, int destX, vector<int>& solution);
     
     /**
      * Try to find a way down. All functions to find a way down are similar to
@@ -140,7 +140,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveToBottom(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveToBottom(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
         
     /**
      * Same as moveTopLeft execpt that it is looking for a way down
@@ -150,7 +150,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveBottomLeft(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveBottomLeft(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
     
     /**
      * Same as moveTopRight execpt that it is looking for a way down
@@ -160,7 +160,7 @@ namespace overlappingSegmentation
      * @param y
      * @param solution
      */
-    void moveBottomRight(const CImg<>& img, sol& path, int x, int y, const vector<int>& solution);
+    void moveBottomRight(const CImg<>& img, sol& path, int x, int y, vector<int>& solution);
     
     /**
      * Same as moveTopLeftUntil
@@ -171,7 +171,7 @@ namespace overlappingSegmentation
      * @param destX
      * @param solution
      */
-    void moveBottomLeftUntil(const CImg<>& img, sol& path, int x, int y, int destX, const vector<int>& solution);
+    void moveBottomLeftUntil(const CImg<>& img, sol& path, int x, int y, int destX, vector<int>& solution);
     
     /**
      * Same as moveTopRightUntil
@@ -182,25 +182,43 @@ namespace overlappingSegmentation
      * @param destX
      * @param solution
      */
-    void moveBottomRightUntil(const CImg<>& img, sol& path, int x, int y, int destX, const vector<int>& solution);
+    void moveBottomRightUntil(const CImg<>& img, sol& path, int x, int y, int destX, vector<int>& solution);
+    
+    /**
+     * Locate the last black pixel after the first block met starting from the
+     * bottom
+     * @param img Where the first column contains at least one black pixel
+     * @param x     Will contain the x position (always 0)
+     * @param y     Will contains the y position
+     */
+    void locateLastBlackPixel(const CImg<>& img, int& x, int& y);
+    
+    /**
+     * Go throught the right and give the location of the first white pixel
+     * @param img
+     * @param x     x coordinate, at the beginning contains the starting point
+     * @param y     y coordinate, at the beginning contains the starting point
+     */
+    void goThrough(const CImg<>& img, int& x, const int& y);
+    
     
     /**
      * Divides the source image into two subimages following the line
      * of x coordinates (from top to buttom)
-     * @param image Source images
-     * @param left  The left sub image
-     * @param right The right sub image
+     * @param img Source images
+     * @param left  The left sub image      Created during the process
+     * @param right The right sub image     Created during the process
      * @param line  The cutting line which divides the image
      */
-    void splitCharLine(const CImg<>& image, CImg<>& left, CImg<>& right, int* line);
-
+    void splitCharLine(const CImg<>& img, CImg<>& left, CImg<>& right, const vector<int>& line);
+    
     /**
-     * Returns if an image is empty (ie white)
-     * @param image Source image
-     * @return True if the image has notgot any unwhite pixel
-     *         False otherwise
+     * Retrieves the first character from the left of the image.
+     * @param img       The image
+     * @param first     Will contain the first character on the left (reduced)
+     * @param remaining Will contain the remaining characters (after the first one) (reduced)
      */
-    bool stop(const CImg<>& image);
+    void splitChar(const CImg<>& img, CImg<>& first, CImg<>& remaining);
 }
 
 #endif	/* OVERLAPPINGSEGMENTATION_H */

@@ -1,4 +1,5 @@
 #include "overlappingSegmentation.h"
+#include "chamfer.h"
 
 namespace overlappingSegmentation
 {
@@ -34,7 +35,7 @@ namespace overlappingSegmentation
                             int x, 
                             int y, 
                             bool right, 
-                            const vector<int>& solution){
+                            vector<int>& solution){
         
         if(y == 0){
             // found a way out to the top
@@ -83,13 +84,17 @@ namespace overlappingSegmentation
                 }
             }
         }
+        
+        if(path.found){
+            solution.at(y) = x;
+        }
     }
     
     void moveToTop(const CImg<>& img,
                     sol& path, 
                     int x, 
                     int y, 
-                    const vector<int>& solution){
+                    vector<int>& solution){
         
         moveToTopInternal(img, path, x, y, true, solution);
         if(!path.found){
@@ -101,7 +106,7 @@ namespace overlappingSegmentation
                         sol& path, 
                         int x, 
                         int y,
-                        const vector<int>& solution){
+                        vector<int>& solution){
         
         path = {false, x, y, path.rx, path.ry};
         colorIfDebug(img, x, y);
@@ -118,7 +123,7 @@ namespace overlappingSegmentation
                         sol& path, 
                         int x, 
                         int y, 
-                        const vector<int>& solution){
+                        vector<int>& solution){
         
         path = {false, path.lx, path.ly, x, y};
         colorIfDebug(img, x, y);
@@ -136,7 +141,7 @@ namespace overlappingSegmentation
                                 int x,
                                 int y,
                                 int destX,
-                                const vector<int>& solution){
+                                vector<int>& solution){
         
         do{
             colorIfDebug(img, x, y);
@@ -158,7 +163,7 @@ namespace overlappingSegmentation
                             int x,
                             int y,
                             int destX,
-                            const vector<int>& solution){
+                            vector<int>& solution){
         
         destX = std::min(destX, (int)(img._width - 1));
 
@@ -199,7 +204,7 @@ namespace overlappingSegmentation
                                 int x,
                                 int y,
                                 bool left,
-                                const vector<int>& solution){
+                                vector<int>& solution){
         
         if(y == img._height - 1){
             path = {true, -1, -1, -1, -1};
@@ -236,6 +241,10 @@ namespace overlappingSegmentation
                 }
             }
         }
+        
+        if(path.found){
+            solution.at(y) = x;
+        }
     }
     
 
@@ -243,7 +252,7 @@ namespace overlappingSegmentation
                             sol& path, 
                             int x,
                             int y,
-                            const vector<int>& solution){
+                            vector<int>& solution){
         
         moveToBottomInternal(img, path, x, y, true, solution);
         if(!path.found){
@@ -255,7 +264,7 @@ namespace overlappingSegmentation
                             sol& path,
                             int x, 
                             int y, 
-                            const vector<int>& solution){
+                            vector<int>& solution){
         
         path = {false, x, y, path.rx, path.ry};
         colorIfDebug(img, x, y);
@@ -272,7 +281,7 @@ namespace overlappingSegmentation
                             sol& path, 
                             int x,
                             int y,
-                            const vector<int>& solution){
+                            vector<int>& solution){
         
         colorIfDebug(img, x, y);
         
@@ -295,7 +304,7 @@ namespace overlappingSegmentation
                                 int x, 
                                 int y,
                                 int destX,
-                                const vector<int>& solution){
+                                vector<int>& solution){
         
         do{
             colorIfDebug(img, x, y);
@@ -316,7 +325,7 @@ namespace overlappingSegmentation
                                     int x, 
                                     int y,
                                     int destX,
-                                    const vector<int>& solution){
+                                    vector<int>& solution){
         
         destX = std::min(destX, (int)(img._width - 1));
 
@@ -334,31 +343,74 @@ namespace overlappingSegmentation
         }
     }
     
-    void splitCharLine(const CImg<>& image, CImg<>& left, CImg<>& right, int* line){
-        int index = 0;
-        cimg_forY(image, y) {
-            cimg_forX(image, x) {
-                if (x < line[index]) {
-                    left(x,y) = image(x,y);
-                    right(x,y) = WHITE_PIXEL;
+    void locateLastBlackPixel(const CImg<>& img, int& x, int& y){
+        //begin in bottom left corner
+        x = 0;
+        y = img._height - 1;
+        
+        while(y > 0 && img(x, y) == WHITE_PIXEL){
+            y--;
+        }
+        
+        while(y > 0 && img(x, y) != WHITE_PIXEL){
+            y--;
+        }
+        
+        y++;
+        
+    }
+    
+    
+    void goThrough(const CImg<>& img, int& x, const int& y){
+        while(x < img._width - 1 && img(x, y) != WHITE_PIXEL){
+            x++;
+        }
+    }
+    
+    
+    void splitCharLine(const CImg<>& img, CImg<>& left, CImg<>& right, const vector<int>& line){
+        left = CImg<>(img._width, img._height, 1, 1, 255);
+        right = CImg<>(img._width, img._height, 1, 1, 255);
+        
+        cimg_forY(img, y) {
+            cimg_forX(img, x) {
+                if (x < line.at(y)) {
+                    left(x,y) = img(x,y);
                 } else {
-                    left(x,y) = WHITE_PIXEL;
-                    right(x,y) = image(x,y);
+                    right(x,y) = img(x,y);
                 }
             }
-            index ++;
         }
         right = projection::reduce(right);
         left = projection::reduce(left);
     }
-
-    bool stop(const CImg<>& image){
-        cimg_forXY(image, x, y) {
-            if (image(x,y) != WHITE_PIXEL) {
-                return false;
-            }  
+    
+    //already reduced !
+    void splitChar(const CImg<>& img, CImg<>& first, CImg<>& remaining){
+        vector<int> split(img._height, -1);
+        sol path = {false, -1, -1, -1, -1};
+        bool cutSucceed = false;
+        int x, y;
+        locateLastBlackPixel(img, x, y);
+        goThrough(img, x, y);
+        
+        while(!cutSucceed){
+            moveToTop(img, path, x, y, split);
+            if(path.found){
+                path = {false, -1, -1, -1, -1};
+                moveToBottom(img, path, x, y, split);
+                if(path.found){
+                    cutSucceed = true;
+                }else{
+                    x++;
+                    goThrough(img, x, y);
+                }
+            }else{
+                x++;
+                goThrough(img, x, y);
+            }
         }
-        return true;
+        splitCharLine(img, first, remaining, split);
     }
 }
 

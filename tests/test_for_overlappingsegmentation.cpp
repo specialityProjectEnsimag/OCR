@@ -23,7 +23,7 @@ using namespace cimg_library;
 #include "preprocessing.h"
 using namespace overlappingSegmentation;
 
-#define FOLDER "./overlapping/"
+#define FOLDER "./Images_Tests/overlapping/"
 
 bool areEquals(sol path, const sol expected){
     if(path.found == expected.found &&
@@ -44,8 +44,9 @@ bool areEquals(sol path, const sol expected){
 }
 
 #ifdef PRINT_DEBUG
-    #define displayIfDebug(img){                        \
-            image_io::displayImage(img.resize(300, 300));  \
+    #define displayIfDebug(img){                                    \
+            CImg<> tmpDisplay(img);                                 \
+            image_io::displayImage(tmpDisplay.resize(300, 300));    \
     }
 
     #define initTrace(img) colored = CImg<>(img);
@@ -462,7 +463,97 @@ void testBottomDoubleStairs(){
     
 }
 
+void testSplitCharLine(){
+    CImg<> img = CImg<>(FOLDER "cross.png");
+    initTrace(img);
+    // cut in half
+    vector<int> split(img._height, 75);
 
+    CImg<> left;
+    CImg<> right;
+    
+    splitCharLine(img, left, right, split);
+    assert(left._width  == 50);
+    assert(left._height == 150);
+
+    assert(right._width  == 50);
+    assert(right._height == 150);
+    
+    // take only the bottom left square
+    for(int i = 0; i < img._height / 2; i++){
+        split.at(i) = 0;
+    }
+    
+    splitCharLine(img, left, right, split);
+    displayIfDebug(right);
+   
+    assert(left._width  == 50);
+    assert(left._height == 50);
+
+    assert(right._width  == 150);
+    assert(right._height == 150);
+
+}
+
+void testLocateLastBlackPixel(){
+    CImg<> img = CImg<>(FOLDER "stairs_for_last_pixel.png");
+    initTrace(img);
+    
+    int x = -1, y = -1;
+    
+    for(int i = 0; i < 4; i++){
+        displayIfDebug(img);
+        locateLastBlackPixel(img, x, y);
+        assert(x == 0); 
+        assert(y == 100 - i * 10);
+        img.crop(10, 0, 149 - i * 10, 149);
+    }
+}
+
+void testGoThrough(){
+    CImg<> img = CImg<>(FOLDER "stairs_for_last_pixel.png");
+    initTrace(img);
+    
+    int x, y;
+    
+    for(int i = 0; i < 4; i++){
+        x = 0;
+        y = 100 - i * 10;
+        
+        goThrough(img, x, y);
+        assert(x == 40 - i*10); 
+        img.crop(10, 0, 149 - i * 10, 149);
+    }
+}
+
+
+void testSplitChar(){
+    CImg<> img = CImg<>(FOLDER "coupure_it.png");
+    img = projection::reduce(preprocessing::otsu_binarization(img));
+    initTrace(img);
+    CImg<> first, last;
+    splitChar(img, first, last);
+    assert(first._width  = 32);
+    assert(first._height = 70);
+    assert(last._width   = 33);
+    assert(last._height  = 61);
+    displayIfDebug(colored);
+    displayIfDebug(first);
+    displayIfDebug(last);
+    
+    
+    img = CImg<>(FOLDER "coupure_po.png");
+    img = projection::reduce(preprocessing::otsu_binarization(img));
+    initTrace(img);
+    splitChar(img, first, last);
+    assert(first._width  = 44);
+    assert(first._height = 61);
+    assert(last._width   = 41);
+    assert(last._height  = 44);
+    displayIfDebug(colored);
+    displayIfDebug(first);
+    displayIfDebug(last);
+}
 
 int main(int argc, char** argv) {
     cout << "Test overlapping segmentation" << endl;

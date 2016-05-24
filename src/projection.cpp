@@ -1,4 +1,5 @@
 #include "projection.h"
+#include "chamfer.h"
 
 namespace projection {
     
@@ -75,7 +76,11 @@ namespace projection {
         int leftB = firstNonEqual(left, img._width);
         int leftE = firstNonEqual(left, img._width, false);
 
-        return img.get_crop(upB, leftB, upE, leftE);
+        if(upB == img._width){
+            return CImg<>(1, 1, 1, 1, 255);
+        }else{
+            return img.get_crop(upB, leftB, upE, leftE);            
+        }
     }
     
     void splitLines(const CImg<>& text, vector< CImg<>* >& lines){
@@ -102,6 +107,8 @@ namespace projection {
         }
     }
     
+#ifdef SLIDING_WINDOW
+    
     void splitCharacters(const CImg<>& line, vector< CImg<>* >& characters){
         vector<int> sep = upward(line);
 
@@ -127,7 +134,28 @@ namespace projection {
             }
         }
     }
+#else
+    void splitCharacters(const CImg<>& line, vector< CImg<>* >& characters){
+        CImg<> img(line);
+        CImg<> left, right;
+        
+        do{
+            // adding white column to make sure the splitting always work
+            img = img.get_resize(img._width + 1, img._height, -100, -100, 0);
+            cimg_forY(img, y){
+                img(img._width - 1, y) = 255;
+            }
+
+            overlappingSegmentation::splitChar(img, left, right);
+            
+            CImg<>* res = new CImg<>(left);
+            img = CImg<>(right);
+            characters.push_back(res);
+        }while(right.min() != WHITE_PIXEL);
+    }
     
+    
+#endif
 };
 
 

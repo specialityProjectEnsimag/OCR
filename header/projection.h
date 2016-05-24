@@ -13,6 +13,7 @@
 #include "image_io.h"
 #include "CImg.h"
 #include <stdlib.h>
+#include "overlappingSegmentation.h"
 
 using namespace cimg_library;
 using namespace std;

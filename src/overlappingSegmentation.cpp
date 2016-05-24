@@ -142,7 +142,7 @@ namespace overlappingSegmentation
                                 int y,
                                 int destX,
                                 vector<int>& solution){
-        
+        destX = std::max(destX, 0);
         do{
             colorIfDebug(img, x, y);
             x--;
@@ -362,7 +362,7 @@ namespace overlappingSegmentation
     
     
     void goThrough(const CImg<>& img, int& x, const int& y){
-        while(x < img._width - 1 && img(x, y) != WHITE_PIXEL){
+        while(x < (img._width - 1) && img(x, y) != WHITE_PIXEL){
             x++;
         }
     }

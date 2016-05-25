@@ -348,11 +348,11 @@ namespace overlappingSegmentation
         x = 0;
         y = img._height - 1;
         
-        while(y > 0 && img(x, y) == WHITE_PIXEL){
+        while(y >= 0 && img(x, y) == WHITE_PIXEL){
             y--;
         }
         
-        while(y > 0 && img(x, y) != WHITE_PIXEL){
+        while(y >= 0 && img(x, y) != WHITE_PIXEL){
             y--;
         }
         

@@ -82,6 +82,19 @@ namespace preprocessing
 
         return smoothed;
     }
+    
+    CImg<> median_filter(CImg<> src) {
+        CImg<> smoothed(src);
+
+        CImg<> Neight(3,3);
+        cimg_for3x3(src,x,y,0,0,Neight,float) {
+            float* tmp = Neight._data;
+            sort(tmp, tmp+9);
+            smoothed(x, y, 0, 0) = tmp[5];
+        }
+
+        return smoothed;
+    }
 
     CImg<> noise(CImg<> src) {
         CImg<> clean (src);

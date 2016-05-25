@@ -11,6 +11,7 @@
 #include "CImg.h"
 #include <stdlib.h>
 #include <vector>
+#include <algorithm>
 #include "chamfer.h"
 
 using namespace cimg_library;
@@ -39,6 +40,13 @@ namespace preprocessing
      * @return      Image with the applied mask
      */
     CImg<> linear_filter(CImg<> src, CImg<> mask);
+    
+    /**
+     * Apply the median filter on each neighborhood
+     * @param src   Image in grayscale
+     * @return      Image with the applied filter
+     */
+    CImg<> median_filter(CImg<> src);
     
     /**
      * Fill blanks and reduce noisy black and white image

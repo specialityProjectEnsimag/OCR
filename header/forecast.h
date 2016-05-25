@@ -23,7 +23,7 @@ using namespace cimg_library;
 using namespace boost::filesystem;
 
 // Best experimental value
-#define NUMBERNEIGHT 3
+#define NUMBERNEIGHT 2
 
 struct forecast_type {
   double probability;

@@ -136,17 +136,6 @@ void checkfont(Forecast* f){
     }
 
     displayStats();
-    
-    for(directory_iterator it(path); it != end_itr; ++it) { 
-        cout << endl << "File    : " << it->path().filename() << endl;
-        std::stringstream filePath;
-
-        string res = analyse(it->path().string().c_str(), f);
-        checkString(res, check);   
-        
-    }
-
-    displayStats();
 }
 
 

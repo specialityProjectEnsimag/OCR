@@ -19,7 +19,6 @@ string analyse(const char* path, Forecast* f){
     CImg<> crop = projection::reduce(img); 
 
     img = preprocessing::otsu_binarization(img);
-    img = preprocessing::skeletonization(img);
     
     vector< CImg<>* > split;
     projection::splitLines(crop, split);    
@@ -40,7 +39,6 @@ string analyse(const char* path, Forecast* f){
        for(int j = 0; j < lines.size(); j++){
             *lines.at(j) = projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE,-100,-100,3);
             *lines.at(j) = preprocessing::otsu_binarization( *lines.at(j));
-              
             std::vector<forecast_type>  res;
             f->forecast(*lines.at(j), res, Chamfer);
             std::vector<forecast_type>::iterator i = res.begin();

@@ -1,6 +1,6 @@
 #include "distance.h"
        
-double Euclidean(CImg<> src, CImg<> average) {
+double Euclidean(const CImg<>& src, const CImg<>& average) {
     double res = 0;
     cimg_forXY(src,x,y) {
         if (src(x,y) == 0) {
@@ -19,13 +19,13 @@ double Euclidean(CImg<> src, CImg<> average) {
     return res;
 }
 
-double Chamfer(CImg<> src, CImg<> average) {
+double Chamfer(const CImg<>& src, const CImg<>& average) {
     // Higher result is, closier images are,
     // It is why we multiplie by -1
     return -chamfer::bin(src).get_mul(average).sum();
 }
 
-double MSE(CImg<> src, CImg<> average) {
+double MSE(const CImg<>& src, const CImg<>& average) {
     // Higher result is, closier images are,
     // It is why we multiplie by -1
     return src.MSE(average);

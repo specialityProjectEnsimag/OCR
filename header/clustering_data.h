@@ -32,7 +32,7 @@ using namespace boost::filesystem;
  * @param iteration         The number of iterations of the algorithm
  * @param average_dataset   The target directory
  */
-void kmeans_directory(vector< CImg<>* >& images, int k, int iteration, string average_dataset);
+void kmeans_directory(vector< CImg<>* >& images, const int k, const int iteration, string average_dataset);
 
 /**
  * Computes the kmeans on the dataset and creates average images in the 
@@ -43,7 +43,7 @@ void kmeans_directory(vector< CImg<>* >& images, int k, int iteration, string av
  * @param average_dataset   The target directory
  * @return                  True if it is a success, False otherwise
  */
-bool kmeans(string dataset, string average_dataset, int k = 50, int iteration = 50);
+bool kmeans(string dataset, string average_dataset, const int k = 50, const int iteration = 50);
 
 /**
  * Gives the corresponding label

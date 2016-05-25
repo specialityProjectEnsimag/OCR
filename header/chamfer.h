@@ -25,9 +25,9 @@ namespace chamfer
      * @param image  Image binarized
      * @return       Chamfer distance
      */
-    CImg<> chamfer(CImg<> image);
+    CImg<> chamfer(const CImg<>& image);
     
-    CImg<> bin(CImg<> image);
+    CImg<> bin(const CImg<>& image);
 }
 #endif	/* CHAMFER_H */
 

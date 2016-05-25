@@ -49,12 +49,12 @@ class Forecast {
          * @param res       The result of the computing
          * @param dist      The ditance to use
          */
-        static void forecast(const CImg<>& image, vector<forecast_type>& res, const vector< CImg<>* >& average, const vector<char>& labels,double (*dist)(CImg<>, CImg<>));
+        static void forecast(const CImg<>& image, vector<forecast_type>& res, const vector< CImg<>* >& average, const vector<char>& labels,double (*dist)(const CImg<>&, const CImg<>&));
 
         /**
          * Computes the same vector but uses images and labels of the object
          */
-        void forecast(const CImg<>& image, vector<forecast_type>& res, double (*dist)(CImg<>, CImg<>)){
+        void forecast(const CImg<>& image, vector<forecast_type>& res, double (*dist)(const CImg<>&, const CImg<>&)){
             forecast(image, res, this->images, this->labels, dist);
         }
         
@@ -65,7 +65,7 @@ class Forecast {
          * @param dist      The ditance to use
          * @return          The index of the closest average image
          */
-        static int indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(CImg<>, CImg<>));
+        static int indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(const CImg<>&, const CImg<>&));
         
 };
 #endif	/* FORECAST_H */

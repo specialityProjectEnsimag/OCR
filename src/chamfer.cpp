@@ -2,7 +2,7 @@
 
 namespace chamfer 
 {
-    CImg<> chamfer(CImg<> image){
+    CImg<> chamfer(const CImg<>& image){
         CImg<> res((image));
         float max = 0;
         
@@ -26,7 +26,7 @@ namespace chamfer
         return max - res;
     }
     
-    CImg<> bin(CImg<> image){
+    CImg<> bin(const CImg<>& image){
         CImg<> res(image);
         
         cimg_forXY(res, x, y){

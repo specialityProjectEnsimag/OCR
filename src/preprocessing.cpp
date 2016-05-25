@@ -8,7 +8,7 @@ namespace preprocessing
      * @param gray      An array for different shades
      * @param length    The length of the array
      */
-    void gray_repartition(CImg<> img, int* gray, int length) {   
+    void gray_repartition(const CImg<>& img, int* gray, int length) {   
         memset(gray, 0, length*sizeof(int));    
 
         cimg_forXY(img, x, y){
@@ -22,7 +22,7 @@ namespace preprocessing
      * @param img   The origine image
      * @return      The threshold
      */
-    int threshold(CImg<> img) {
+    int threshold(const CImg<>& img) {
         int gray[256];
         gray_repartition(img, gray, 256);
 
@@ -62,7 +62,7 @@ namespace preprocessing
         return lvl;
     }
 
-    CImg<> otsu_binarization(CImg<> src) {
+    CImg<> otsu_binarization(const CImg<>& src) {
         CImg<> binarized(src);
         int lvl = threshold(src);
         cimg_forXY(src, x, y) {
@@ -72,7 +72,7 @@ namespace preprocessing
         return binarized;
     }
 
-    CImg<> linear_filter(CImg<> src, CImg<> mask) {    
+    CImg<> linear_filter(const CImg<>& src, const CImg<>& mask) {    
         CImg<> smoothed(src);
 
         CImg<> Neight(3,3);
@@ -83,7 +83,7 @@ namespace preprocessing
         return smoothed;
     }
     
-    CImg<> median_filter(CImg<> src) {
+    CImg<> median_filter(const CImg<>& src) {
         CImg<> smoothed(src);
 
         CImg<> Neight(3,3);
@@ -96,13 +96,13 @@ namespace preprocessing
         return smoothed;
     }
 
-    CImg<> noise(CImg<> src) {
+    CImg<> noise(const CImg<>& src) {
         CImg<> clean (src);
         clean.mirror('x');
         clean.mirror('y');
         CImg<> Neight(3,3);
         bool change = true;
-        int tour = 0 ;
+        //int tour = 0 ;
         //while (change) {
             change = false;
             CImg<> tmp(clean);
@@ -148,7 +148,7 @@ namespace preprocessing
      * @param src   A 3x3 image
      * @return      The number of pattern
      */
-    int getA(CImg<> src) {
+    int getA(const CImg<>& src) {
         int res = 0;
         // P2 == WHITE_PIXEL and P3 == BLACK_PIXEL
         if (src(1,0,0,0) == WHITE_PIXEL && src(2,0,0,0) == BLACK_PIXEL) res++;
@@ -178,7 +178,7 @@ namespace preprocessing
      * @param src   A 3x3 image
      * @return      The number of black pixel
      */
-    int getB(CImg<> src) {
+    int getB(const CImg<>& src) {
         int res = 0;
         cimg_forXY(src, x, y) {
             // Not compute for the central pixel
@@ -189,7 +189,7 @@ namespace preprocessing
         return res;
     }
 
-    CImg<> skeletonization(CImg<> src) {
+    CImg<> skeletonization(const CImg<>& src) {
         CImg<> res (src);
         CImg<> Neight(5,5);
         bool change = true;

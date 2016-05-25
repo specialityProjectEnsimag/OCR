@@ -26,7 +26,7 @@ Forecast::Forecast(string average_dataset) {
 }
 
 #ifdef KNN
-void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, const std::vector< CImg<>* >& average, const std::vector<char>& labels, double (*dist)(CImg<>, CImg<>)) {
+void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, const std::vector< CImg<>* >& average, const std::vector<char>& labels, double (*dist)(const CImg<>&, const CImg<>&)) {
     int length = average.size();
 
     std::vector<forecast_type> tmp;
@@ -92,7 +92,7 @@ void mergeContiguous(std::vector<forecast_type>& list) {
     }
 }
 
-void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, const std::vector< CImg<>* >& average, const std::vector<char>& labels, double (*dist)(CImg<>, CImg<>)) {
+void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, const std::vector< CImg<>* >& average, const std::vector<char>& labels, double (*dist)(const CImg<>&, const CImg<>&)) {
     int length = average.size();
     double probability[length];
     double max = 0;
@@ -129,7 +129,7 @@ void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, co
 }
 #endif
 
-int Forecast::indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(CImg<>, CImg<>)) {
+int Forecast::indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(const CImg<>&, const CImg<>&)) {
     int length = average.size();
     double probability[length];
     int min = 0;

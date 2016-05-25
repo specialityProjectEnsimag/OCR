@@ -12,11 +12,11 @@
 #include "chamfer.h"
 using namespace cimg_library;
         
-double Euclidean(CImg<> src, CImg<> average);
+double Euclidean(const CImg<>& src, const CImg<>& average);
 
-double Chamfer(CImg<> src, CImg<> average);
+double Chamfer(const CImg<>& src, const CImg<>& average);
 
-double MSE(CImg<> src, CImg<> average);
+double MSE(const CImg<>& src, const CImg<>& average);
 
 #endif	/* DISTANCE_H */
 

@@ -1,27 +1,29 @@
 #include "clustering_data.h"
 
-void kmeans_directory(std::vector< CImg<>* >& images, int k, int iteration, string average_dataset) {
+void kmeans_directory(std::vector< CImg<>* >& images, const int k, const int iteration, string average_dataset) {
     vector < CImg<>* > average;
     
-    // Initialisation of the average vector 
-    for (int i = 0; i < k; i++) {
-        // Random Choose of images with copy
-        CImg<>* tmp = new CImg<>(*images.at(rand()%images.size()));
-        average.push_back(tmp);
-    }
-        
-    for (int i = 0; i < iteration; i++) {
-        vector< CImg<>* > predicted_class[k];
-        for (vector< CImg<>* >::iterator it = images.begin(); it != images.end(); ++it) {
-            // We compute the best categorie
-            int indice = Forecast::indexOfClosest(**it, average, MSE);
-            predicted_class[indice].push_back(*it);
+    if (images.size() > k) {
+        // Initialisation of the average vector 
+        for (int i = 0; i < k; i++) {
+            // Random Choose of images with copy
+            CImg<>* tmp = new CImg<>(*images.at(rand()%images.size()));
+            average.push_back(tmp);
         }
-        
-        // Compute the average of the new images
-        for (int j = 0; j < k; j++) {
-            if (predicted_class[j].size() != 0) {
-                *average[j] = image_io::average(predicted_class[j]);
+
+        for (int i = 0; i < iteration; i++) {
+            vector< CImg<>* > predicted_class[k];
+            for (vector< CImg<>* >::iterator it = images.begin(); it != images.end(); ++it) {
+                // We compute the best categorie
+                int indice = Forecast::indexOfClosest(**it, average, MSE);
+                predicted_class[indice].push_back(*it);
+            }
+
+            // Compute the average of the new images
+            for (int j = 0; j < k; j++) {
+                if (predicted_class[j].size() != 0) {
+                    *average[j] = image_io::average(predicted_class[j]);
+                }
             }
         }
     }
@@ -30,7 +32,7 @@ void kmeans_directory(std::vector< CImg<>* >& images, int k, int iteration, stri
     image_io::delete_images(average);
 }
 
-bool kmeans(string dataset, string average_dataset, int k, int iteration) {
+bool kmeans(string dataset, string average_dataset, const int k, const int iteration) {
     path path(dataset); 
  
     // If the directory does not exist
@@ -85,6 +87,11 @@ bool kmeans(string dataset, string average_dataset, int k, int iteration) {
 
 char corresponding_label(string dir) {
     // This function is parametrated for the dataset
+    // First we observe the special character
+    if (dir.length() == 1) {
+        return dir.c_str()[0];
+    }
+    // Second the other
     int value = atoi(dir.substr(6,3).c_str());
     if (value < 11) {
         return value - 1 + '0';

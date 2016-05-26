@@ -19,12 +19,12 @@ string analyse(const char* path, Forecast* f){
 
     img = preprocessing::otsu_binarization(img);
     
-    vector< CImg<>* > split;
-    projection::splitLines(crop, split);    
+    vector< text_line* > split;
+    splitLines(crop, split);    
 
     for(unsigned int i = 0; i < split.size(); i++){
-       vector< CImg<>* > lines;
-       CImg<> line = projection::reduce(*split.at(i));
+       vector< text_character* > lines;
+       CImg<> line = projection::reduce(split.at(i)->img);
        
        // in order to temporary remove unwanted little pixel
        // will be done with a preprocessing part later
@@ -32,19 +32,19 @@ string analyse(const char* path, Forecast* f){
            cout << "\t Too small" << endl;
            continue;
        }
-       projection::splitCharacters(line, lines);
+       splitCharacters(line, lines);
 
 
        for(unsigned int j = 0; j < lines.size(); j++){
-            *lines.at(j) = projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE,-100,-100,3);
+            CImg<> elt = projection::reduce(lines.at(j)->img).resize(SQUARE,SQUARE,-100,-100,3);
             std::vector<forecast_type>  res;
-            f->forecast(*lines.at(j), res, MSE);
+            f->forecast(elt, res, MSE);
             std::vector<forecast_type>::iterator i = res.begin();
             output << i->character;
        }
-       image_io::delete_images(lines);
+       text_character::freeVector(lines);
     }
-    image_io::delete_images(split);
+    text_line::freeVector(split);
     
     return output.str();
 }

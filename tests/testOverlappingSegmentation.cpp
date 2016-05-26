@@ -15,6 +15,9 @@
 
 #include "base_test_segmentation.h"
 
+#include "overlapping.h"
+using namespace overlapping;
+
 /**
  * @param fileName              Path to the image
  * @param charactersPerLine     Expected number of characters per line
@@ -33,8 +36,8 @@ void testSplitAlgorithm(const char* fileName, vector<int> charactersPerLine, boo
         crop = preprocessing::otsu_binarization(crop);        
     }
 
-    vector< CImg<>* > split;
-    projection::splitLines(crop, split);    
+    vector< text_line* > split;
+    splitLines(crop, split);    
 
     if(split.size() != charactersPerLine.size()){
         cout << "Number of lines incorrect !" << endl;
@@ -45,26 +48,26 @@ void testSplitAlgorithm(const char* fileName, vector<int> charactersPerLine, boo
     bool error = false;
     
     for(int i = 0; i < end; i++){
-       vector< CImg<>* > lines;
-       CImg<> line = projection::reduce(*split.at(i));
+       vector< text_character* > lines;
+       CImg<> line = projection::reduce(split.at(i)->img);
        
-       projection::splitCharacters(line, lines);
-       if(lines.size() != charactersPerLine.at(i)){
+       splitCharacters(line, lines);
+       if((int)lines.size() != charactersPerLine.at(i)){
            error = true;
            debug(DEBUG_LOT, "Error on line " << i << endl);
            debug(DEBUG_LOT, "Split " << lines.size());
            debug(DEBUG_LOT, " expected " << charactersPerLine.at(i) << endl);
            
-           for(int j = 0; j < lines.size(); j++){
-               display(*lines.at(j));
+           for(unsigned int j = 0; j < lines.size(); j++){
+               display(lines.at(j)->img);
            }
        }
        
        
-       image_io::delete_images(lines);       
+       text_character::freeVector(lines);       
     }
 
-    image_io::delete_images(split);
+    text_line::freeVector(split);
     
     if(error){
         cout << "Test incorrect on " << fileName << endl;

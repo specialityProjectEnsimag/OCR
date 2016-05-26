@@ -76,20 +76,7 @@ namespace projection {
      * @return The same image without the white borders
      */
     CImg<> reduce(CImg<> img);
-    
-    /**
-     *  Split the given text into lines 
-     * @param text      The text to split
-     * @param lines     The line extracted
-     */
-    void splitLines(const CImg<>& text, vector< CImg<>* >& lines);
-    
-    /**
-     * Given a line split into characters
-     * @param line         The line to split
-     * @param characters    List of characters found
-     */
-    void splitCharacters(const CImg<>& line, vector< CImg<>* >& characters);
+
 };
 
 #endif	/* PROJECTION_H */

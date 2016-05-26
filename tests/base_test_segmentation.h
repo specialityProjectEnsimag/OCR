@@ -51,7 +51,7 @@ using namespace std;
 
 #endif
 
-#define printColumns(size, content) cout << setfill(' ') << setw(size)  << content;
+#define printColumns(size, content) cout << setfill(' ') << setw(size) << setprecision(4) << content;
 
 
 #endif	/* BASE_TEST_SEGMENTATION_H */

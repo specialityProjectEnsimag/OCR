@@ -10,6 +10,11 @@
 
 #include "base_test_segmentation.h"
 
+#include "text_character.h"
+#include "text_line.h"
+#include "sliding_window.h"
+#include "overlapping.h"
+
 /**
  *  Fonts' name. When adding a font, you have to make sure to provide one image per serie
  */
@@ -33,11 +38,13 @@ void printHeader(){
  * @param charactersPerLine     Expected number of characters per line
  * @param preprocessing         If set to TRUE, a preprocessing is applied on the imae
  */
-void testSplitStat(const char* fileName, vector<int> charactersPerLine, bool preprocessing){
+void testSplitStat(const char* fileName, vector<int> charactersPerLine,
+                          void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
+                          void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters)){
     CImg<> img = image_io::import(fileName);
     display(img);
     CImg<> crop = projection::reduce((img));
-    
+    crop = preprocessing::otsu_binarization(crop);
     int nLine = 0;
     int nLineIncorrect = 0;
     int nCharacter = 0;
@@ -45,8 +52,8 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine, bool pre
     int nLineNotEnough = 0;
     int nLineTooMuch = 0;
             
-    vector< CImg<>* > split;
-    projection::splitLines(crop, split);    
+    vector< text_line* > split;
+    sLines(crop, split);    
 
     if(split.size() != charactersPerLine.size()){
         cout << "Number of lines incorrect !" << endl;
@@ -57,16 +64,16 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine, bool pre
     
     for(int i = 0; i < nLine; i++){
        nCharacter += charactersPerLine.at(i);
-       vector< CImg<>* > lines;
+       vector< text_character* > lines;
        
-       CImg<> line = projection::reduce(*split.at(i));
+       CImg<> line = projection::reduce(split.at(i)->img);
        
-       projection::splitCharacters(line, lines);
+       sCharacters(line, lines);
        nCharacterFound += lines.size();
        
-       if(lines.size() != charactersPerLine.at(i)){
+       if((int)lines.size() != charactersPerLine.at(i)){
            nLineIncorrect++;
-           if(lines.size() > charactersPerLine.at(i)){
+           if((int)lines.size() > charactersPerLine.at(i)){
                nLineTooMuch++;
            }else{
                nLineNotEnough++;
@@ -77,48 +84,50 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine, bool pre
            debug(DEBUG_LOT, " expected " << charactersPerLine.at(i) << endl);
            
            display(line);
-           for(int j = 0; j < lines.size(); j++){
-               display(*lines.at(j));
+           for(unsigned int j = 0; j < lines.size(); j++){
+               display(lines.at(j)->img);
            }
        }
        
-       
-       image_io::delete_images(lines);       
+
+       text_character::freeVector(lines);
     }
 
-    image_io::delete_images(split);
+    text_line::freeVector(split);
 
     printColumns( 8, nLine << ";");
     printColumns(15, nLineIncorrect << ";");
-    printColumns( 7, (nLine - nLineIncorrect)*100/nLine << "%;");
+    printColumns( 7, (float)((nLine - nLineIncorrect)*100/(float)nLine) << "%;");
     printColumns(15, nCharacter << ";");
     printColumns(15, nCharacterFound << ";");
-    printColumns( 7, nCharacterFound*100/nCharacter << "%;");
+    printColumns( 7, (float)(nCharacterFound*100/(float)nCharacter) << "%;");
     printColumns(25, nLineNotEnough << ";");
     printColumns(25, nLineTooMuch << ";" << endl);
 }
 
-void testAll(const char* baseFile, const char* title, bool preprocessing, std::vector<int> charPerLine){
+void testAll(const char* baseFile, const char* title, std::vector<int> charPerLine,
+                      void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
+                      void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters)){
     cout << title << endl;
     printHeader();
     for(int i = 0; i < NBFONTS; i++){
         std::stringstream output;
         printColumns(14, fonts[i] << ";");
         output << FOLDER << baseFile << fonts[i] <<".png" ;
-        testSplitStat(output.str().c_str(), charPerLine, preprocessing);
+        testSplitStat(output.str().c_str(), charPerLine, sLines, sCharacters);
     }
 }
 
 int main() {
     cout << "Test segmentation overlapping" << endl;
-    
-    int text1[] = {36, 46, 57, 55, 43, 34, 52, 43, 41};
+    cout << "DEFINE " << DEBUG_LEVEL << endl;
+    int text1[] = {36, 46, 57, 55, 43, 34, 52, 43, 42};
     std::vector<int> charPerLine(text1, text1 + sizeof(text1) / sizeof(int) );
     
-    testAll("text-1-", "Sans traitement: ", false, charPerLine);
-    cout << endl << endl;
-    testAll("text-1-", "Avec traitement: ", true, charPerLine);
+    testAll("text-1-", "Sliding window", charPerLine, sliding_window::splitLines, sliding_window::splitCharacters);
+    testAll("text-1-", "Overlapping segmentation", charPerLine, sliding_window::splitLines, overlapping::splitCharacters);
     
+       
    
     return (EXIT_SUCCESS);
 }

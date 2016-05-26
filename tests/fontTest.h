@@ -23,6 +23,9 @@
 #include "CImg.h"
 #include <iomanip>
 
+#include "overlapping.h"
+using namespace overlapping;
+
 using namespace boost::filesystem;
 using namespace cimg_library;
 using namespace std;

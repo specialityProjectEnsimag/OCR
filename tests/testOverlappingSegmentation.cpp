@@ -72,7 +72,7 @@ void testSplitAlgorithm(const char* fileName, vector<int> charactersPerLine, boo
 
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Test segmentation" << endl;
     // the array contains the number of expected characters per line
     // including all ponctuation marks

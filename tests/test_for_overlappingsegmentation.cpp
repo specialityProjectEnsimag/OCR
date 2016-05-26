@@ -555,7 +555,7 @@ void testSplitChar(){
     displayIfDebug(last);
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Test overlapping segmentation" << endl;
     testMoveToTop();
     testNoPathTopLeft();

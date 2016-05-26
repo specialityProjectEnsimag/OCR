@@ -109,7 +109,7 @@ void testAll(const char* baseFile, const char* title, bool preprocessing, std::v
     }
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Test segmentation overlapping" << endl;
     
     int text1[] = {36, 46, 57, 55, 43, 34, 52, 43, 41};

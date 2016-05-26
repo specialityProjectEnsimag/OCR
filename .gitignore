@@ -6,3 +6,5 @@ nbdist/
 nbactions.xml
 dataset/
 result_dataset/
+*.o
+exec_test/

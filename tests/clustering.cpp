@@ -25,7 +25,7 @@ void realTest() {
     assert(kmeans("dataset", "result_dataset"));
 }
 
-int main(int argc, char** argv) {
+int main() {
     directoryDoesNotExist();
     targetWithSameName();
     realTest();

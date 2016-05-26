@@ -46,7 +46,7 @@ string analyse(const char* path, Forecast* f){
     return output.str();
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Test Character recognition on fonts" << endl;
     
     cout << "Loading OCR ..." << endl;    

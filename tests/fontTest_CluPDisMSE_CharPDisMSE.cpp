@@ -22,7 +22,7 @@ string analyse(const char* path, Forecast* f){
     vector< CImg<>* > split;
     projection::splitLines(crop, split);    
 
-    for(int i = 0; i < split.size(); i++){
+    for(unsigned int i = 0; i < split.size(); i++){
        vector< CImg<>* > lines;
        CImg<> line = projection::reduce(*split.at(i));
        
@@ -35,7 +35,7 @@ string analyse(const char* path, Forecast* f){
        projection::splitCharacters(line, lines);
 
 
-       for(int j = 0; j < lines.size(); j++){
+       for(unsigned int j = 0; j < lines.size(); j++){
             *lines.at(j) = projection::reduce(*lines.at(j)).resize(SQUARE,SQUARE,-100,-100,3);
             std::vector<forecast_type>  res;
             f->forecast(*lines.at(j), res, MSE);
@@ -49,7 +49,7 @@ string analyse(const char* path, Forecast* f){
     return output.str();
 }
 
-int main(int argc, char** argv) {
+int main() {
     cout << "Test Character recognition on fonts" << endl;
     
     cout << "Loading OCR ..." << endl;    

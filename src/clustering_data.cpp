@@ -3,7 +3,7 @@
 void kmeans_directory(std::vector< CImg<>* >& images, const int k, const int iteration, string average_dataset) {
     vector < CImg<>* > average;
     
-    if (images.size() > k) {
+    if ((int)images.size() > k) {
         // Initialisation of the average vector 
         for (int i = 0; i < k; i++) {
             // Random Choose of images with copy

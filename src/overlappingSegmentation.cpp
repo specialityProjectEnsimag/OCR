@@ -130,7 +130,7 @@ namespace overlappingSegmentation
         
         if(img(x, y-1) == WHITE_PIXEL){
             moveToTop(img, path, x, y - 1, solution);
-        }else if(x < img._width - 1 && img(x+1, y) == WHITE_PIXEL){
+        }else if(x < (int)(img._width - 1) && img(x+1, y) == WHITE_PIXEL){
             // keep going to the right
             moveTopRight(img, path, x+1, y, solution);
         }
@@ -206,7 +206,7 @@ namespace overlappingSegmentation
                                 bool left,
                                 vector<int>& solution){
         
-        if(y == img._height - 1){
+        if(y == (int)(img._height - 1)){
             path = {true, -1, -1, -1, -1};
         }else if(img(x, y + 1) == WHITE_PIXEL){
 
@@ -287,7 +287,7 @@ namespace overlappingSegmentation
         
         if(img(x, y+1) == WHITE_PIXEL){ 
             moveToBottom(img, path, x, y + 1, solution);
-        }else if(x == img._width - 1){  
+        }else if(x == (int)(img._width - 1)){  
             // went as far as possible to the right and can't go up
             path = {false, path.lx, path.ly, x, y};
         }else if(img(x+1, y) == WHITE_PIXEL){
@@ -362,7 +362,7 @@ namespace overlappingSegmentation
     
     
     void goThrough(const CImg<>& img, int& x, const int& y){
-        while(x < (img._width - 1) && img(x, y) != WHITE_PIXEL){
+        while(x < (int)(img._width - 1) && img(x, y) != WHITE_PIXEL){
             x++;
         }
     }

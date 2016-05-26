@@ -6,8 +6,8 @@ namespace projection {
     vector<int> leftward(CImg<> img){
         vector<int> sum(img._height, 0);
         
-        for(int h = 0; h < img._height; h++){
-            int j = 0;
+        for(unsigned int h = 0; h < img._height; h++){
+            unsigned int j = 0;
             while(j < img._width && img(j,h) == 255){
                 sum.at(h) = sum.at(h) + 1 ;
                 j++;
@@ -18,7 +18,7 @@ namespace projection {
     
     CImg<> leftwardToImg(vector<int> left, int width){
         CImg<> img(width, left.size(), 1, 1, 255);
-        for(int h = 0; h < left.size(); h++){
+        for(unsigned int h = 0; h < left.size(); h++){
             for(int w = 0; w < left.at(h); w++){
                 img(w, h) = 0;
             }
@@ -29,8 +29,8 @@ namespace projection {
     vector<int> upward(CImg<> img){
         vector<int> sum(img._width, 0);
         
-        for(int w = 0; w < img._width; w++){
-            int j = 0;
+        for(unsigned int w = 0; w < img._width; w++){
+            unsigned int j = 0;
             while(j < img._height && img(w, j) == 255){
                 sum.at(w) = sum.at(w) + 1 ;
                 j++;
@@ -41,7 +41,7 @@ namespace projection {
   
     CImg<> upwardToImg(vector<int> top, int height){
         CImg<> img(top.size(), height, 1, 1, 255);
-        for(int w = 0; w < top.size(); w++){
+        for(unsigned int w = 0; w < top.size(); w++){
             for(int h = 0; h < top.at(w); h++){
                 img(w, h) = 0;
             }
@@ -55,7 +55,7 @@ namespace projection {
             index = -1;
             do{
                 index++;
-            }while(index < projection.size() && projection.at(index) == value);
+            }while(index < (int) projection.size() && projection.at(index) == value);
         }else{
             index = projection.size();
             do{
@@ -76,7 +76,7 @@ namespace projection {
         int leftB = firstNonEqual(left, img._width);
         int leftE = firstNonEqual(left, img._width, false);
 
-        if(upB == img._width){
+        if(upB == (int) img._width){
             return CImg<>(1, 1, 1, 1, 255);
         }else{
             return img.get_crop(upB, leftB, upE, leftE);            
@@ -91,7 +91,7 @@ namespace projection {
         
         int full = text._width;
         sep.push_back(full);
-        for(int i = 0; i < sep.size(); i++){
+        for(unsigned int i = 0; i < sep.size(); i++){
             if(state == 0){
                 if(sep.at(i) != full){
                     beg = i;

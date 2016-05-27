@@ -18,8 +18,8 @@
 /**
  *  Fonts' name. When adding a font, you have to make sure to provide one image per serie
  */
-string fonts[] = {"arial", "calibri", "comicSansMS", "corsiva", "droidSerif", "roboto", "ubuntu"};
-#define NBFONTS 7
+string fonts[] = {"arial", "calibri", "comicSansMS", "corsiva", "droidSerif", "lobster", "roboto", "ubuntu"};
+#define NBFONTS 8
 
 void printHeader(){
     printColumns(15, ";");

@@ -77,6 +77,52 @@ namespace projection {
      */
     CImg<> reduce(CImg<> img);
 
+    /**
+     * Counts the number of black pixel on each column and put the result
+     * in the associated index in the result vector
+     * @param img       The image
+     * @returns         The vertical histogram of the given image
+     */
+    vector<int> verticalHistogram(const CImg<>& img);
+
+    /**
+     * Counts the number of black pixel on each row and put the result
+     * in the associated index in the result vector
+     * @param img       The image
+     * @returns         The horizontal histogram of the given image
+     */
+    vector<int> horizontalHistogram(const CImg<>& img);
+
+    /**
+     * Implementation of the second difference approach in order to get
+     * a better objective function as describe in this paper:
+     * On the Recognition of Printed Characters of Any Font and Size 
+     *  SIMON KAHAN, THEO PAVLIDIS, FELLOW, IEEE, AND HENRY S. BAIRD, MEMBER, IEEE
+     *  
+     * @param vect histogram vector which is the result of either verticalHistogram or
+     *              horizontalHistogram
+     * @return [description]
+     */
+    vector<int> secondDifference(const vector<int>& vect);
+
+    /**
+     * Implementation of the ANDing algorithm as described in: 
+     *      Major components of a complete text reading system
+     *          S. Tsujimoto ; Toshiba Corp., Kawasaki, Japan ; H. Asada
+     *          
+     * Briefly         
+     * A logical AND is performed between two successive colmuns:
+     *      imgAND(x, y) = img(x, y) AND img(x+1, y)
+     *      it assumes that white pixel is 0 and black pixel is 1
+     * and then a normal verticalHistogram in performed on the resulting image     
+     *                        
+     * 
+     * 
+     * @param g [description]
+     * @return [description]
+     */
+    vector<int> ANDing(const CImg<>& img);
+
 };
 
 #endif	/* PROJECTION_H */

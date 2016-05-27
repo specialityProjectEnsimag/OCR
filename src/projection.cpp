@@ -82,6 +82,61 @@ namespace projection {
             return img.get_crop(upB, leftB, upE, leftE);            
         }
     }
+
+    vector<int> verticalHistogram(const CImg<>& img){
+        vector<int> hist(img._width, 0);
+        cimg_forX(img, x){
+            int count = 0;
+            for(unsigned int y = 0; y <img._height; y++){
+                if(img(x, y) != WHITE_PIXEL){
+                    count++;
+                }
+            }
+            hist.at(x) = count;
+        }
+
+        return hist;
+    }
+
+    vector<int> horizontalHistogram(const CImg<>& img){
+        vector<int> hist(img._width, 0);
+        cimg_forY(img, y){
+            int count = 0;
+            for(unsigned int x = 0; x <img._width; x++){
+                if(img(x, y) != WHITE_PIXEL){
+                    count++;
+                }
+            }
+            hist.at(y) = count;
+        }
+
+        return hist;
+    }
+
+    vector<int> secondDifference(const vector<int>& vect){
+        vector<int> res(vect.size(), 0);
+        res.at(0) = vect.at(0);
+        for(unsigned int i = 1; i < (vect.size() - 1); i++){
+            res.at(i) = vect.at(i-1) - 2*vect.at(i) + vect.at(i + 1);
+        }
+
+        return res;
+    }
+
+    vector<int> ANDing(const CImg<>& img){
+        CImg<> imgAND(img._width, img._height, 1, 1, 255);
+        for(unsigned x = 0; x < (img._width - 1); x++){
+            cimg_forY(img, y){
+                if((img(x, y) == BLACK_PIXEL) && (img(x+1, y) == BLACK_PIXEL)){
+                    imgAND(x, y) = BLACK_PIXEL;
+                }
+
+            }
+        }
+
+        return verticalHistogram(imgAND);
+    }
+
 };
 
 

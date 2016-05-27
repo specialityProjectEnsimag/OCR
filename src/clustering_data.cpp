@@ -1,9 +1,8 @@
 #include "clustering_data.h"
 
 void kmeans_directory(std::vector< CImg<>* >& images, const int k, const int iteration, string average_dataset) {
-    vector < CImg<>* > average;
-    
     if ((int)images.size() > k) {
+        vector< CImg<>*> average; 
         // Initialisation of the average vector 
         for (int i = 0; i < k; i++) {
             // Random Choose of images with copy
@@ -26,10 +25,12 @@ void kmeans_directory(std::vector< CImg<>* >& images, const int k, const int ite
                 }
             }
         }
+        // Save images
+        image_io::exportAll(average_dataset.c_str(), average);
+        image_io::delete_images(average);
+    } else {
+        image_io::exportAll(average_dataset.c_str(), images);
     }
-    // Save images
-    image_io::exportAll(average_dataset.c_str(), average);
-    image_io::delete_images(average);
 }
 
 bool kmeans(string dataset, string average_dataset, const int k, const int iteration) {
@@ -83,21 +84,4 @@ bool kmeans(string dataset, string average_dataset, const int k, const int itera
     }
     cerr << "Arborescence unrespected !" << endl;
     return false;
-}
-
-char corresponding_label(string dir) {
-    // This function is parametrated for the dataset
-    // First we observe the special character
-    if (dir.length() == 1) {
-        return dir.c_str()[0];
-    }
-    // Second the other
-    int value = atoi(dir.substr(6,3).c_str());
-    if (value < 11) {
-        return value - 1 + '0';
-    } else if (value < 37) {
-        return value - 11 + 'A';
-    } else {
-        return value - 37 + 'a';
-    }
 }

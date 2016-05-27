@@ -13,6 +13,7 @@
 #include <vector> 
 #include <math.h> 
 
+#include "dataset.h"
 #include "image_io.h"
 #include "clustering_data.h"
 

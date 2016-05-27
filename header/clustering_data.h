@@ -45,11 +45,4 @@ void kmeans_directory(vector< CImg<>* >& images, const int k, const int iteratio
  */
 bool kmeans(string dataset, string average_dataset, const int k = 50, const int iteration = 50);
 
-/**
- * Gives the corresponding label
- * @param file  The name of the directory
- * @return      The corresponding label
- */
-char corresponding_label(string dir);
-
 #endif

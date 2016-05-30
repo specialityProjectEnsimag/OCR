@@ -18,7 +18,7 @@ using namespace std;
 using namespace cimg_library;
 using namespace boost::filesystem;
 
-#define NUMBER_LETTER 86
+#define NUMBER_LETTER 87
 
 /**
  * Gives the corresponding label

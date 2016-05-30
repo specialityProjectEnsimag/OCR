@@ -76,8 +76,7 @@ int main(int argc, char** argv) {
         std::ifstream ifs("hmm_save");
         boost::archive::text_iarchive ia(ifs);
         ia >> hmm;
-    }
-    hmm.print();    
+    }    
     
     vector<char> res(analyse(argv[1], &forecast));
     cout << "Analyse without hmm : ";

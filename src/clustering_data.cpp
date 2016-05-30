@@ -26,10 +26,10 @@ void kmeans_directory(std::vector< CImg<>* >& images, const int k, const int ite
             }
         }
         // Save images
-        image_io::exportAll(average_dataset.c_str(), average);
+        image_io::exportAll_compressed(average_dataset.c_str(), average);
         image_io::delete_images(average);
     } else {
-        image_io::exportAll(average_dataset.c_str(), images);
+        image_io::exportAll_compressed(average_dataset.c_str(), images);
     }
 }
 

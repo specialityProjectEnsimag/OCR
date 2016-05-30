@@ -19,6 +19,7 @@ char corresponding_label(string dir) {
     } else if (value == 64) {
         return '.';
     }
+    cout << dir << endl;
     throw invalid_argument("No corresponding character !");
 }
 
@@ -32,27 +33,26 @@ int corresponding_int(char c) {
             return c - 'a' + last;
         } else {
             last += 'z' - 'a' + 1;
-            if ('(' <= c && c <= '?' ) {
-                return c - '(' + last;
+            if ('&' <= c && c <= '?' ) {
+                return c - '&' + last;
             } else {
-                last += '?' - '(' + 1;
+                last += '?' - '&' + 1;
                 if ('!' <= c && c <= '#') {
                     return c - '!' + last;
                 } else {
                     last += '#' - '!' + 1;
-                    if (c =='&') {
+                    if (c=='{') {
                         return last; 
-                    } else if (c=='{') {
-                        return last + 1; 
                     } else if (c=='}') {
-                        return last + 2;
+                        return last + 1;
                     } else if (c=='~') {
-                        return last + 3;
+                        return last + 2;
                     }
                 }
             }
         }
     }
+    cout << c << endl;
     throw invalid_argument("No corresponding integer !");
 }
 
@@ -68,26 +68,25 @@ char corresponding_char(int i) {
             return 'a' + i - last ;
         } else {
             last += 'z' - 'a' + 1;
-            if (i - last  <= '?' - '(') {
-                return '(' + i - last;
+            if (i - last  <= '?' - '&') {
+                return '&' + i - last;
             } else {
-                last += '?' - '(' + 1;
+                last += '?' - '&' + 1;
                 if (i - last <= '#' - '!') {
                     return '!' + i - last;
                 } else {
                     last += '#' - '!' + 1;
                     if (i == last) {
-                        return '&'; 
-                    } else if (i == last + 1) {
                         return '{'; 
-                    } else if (i == last + 2) {
+                    } else if (i == last + 1) {
                         return '}';
-                    } else if (i == last + 3) {
+                    } else if (i == last + 2) {
                         return '~';
                     }
                 }
             }
         }
     }
+    cout << i << endl;
     throw invalid_argument("No corresponding character !");
 }

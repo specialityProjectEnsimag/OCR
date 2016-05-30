@@ -12,6 +12,7 @@
 #include "image_io.h"
 #include "preprocessing.h"
 #include "clustering_data.h"
+#include "distance.h"
 #include "CImg.h"
 
 #include "projection.h"
@@ -24,11 +25,14 @@ int main(int argc, char** argv) {
     //cimg::exception_mode(0);
     
     cout << "Welcome !" << endl;
- 
-    CImg<> img1 = image_io::import(argv[1]);
-    preprocessing::preprocessing(img1);
-        CImgDisplay main_disp(img1, " ",0);
-        while (!main_disp.is_closed()){
-            main_disp.wait();
-        }
+    
+    CImg<> img = image_io::import(argv[1]);
+
+    float tab[9] = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+    CImg<> mask(tab,3,3);
+    img = preprocessing::linear_filter(img, mask);
+    //img = preprocessing::median_filter(img);
+    img = preprocessing::otsu_binarization(img);
+    img.save("lineaire.png");
+    
 }

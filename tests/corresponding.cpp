@@ -32,8 +32,10 @@ int main(int argc, char** argv) {
                 cout << c << " - " << i << " - " << r << endl;
                 tab[i] ++;
                 if (!(0 <= i && i < NUMBER_LETTER)) {
+                    cout << "Invalid number"<< endl;
                     return false;
                 } else if (c != r) {
+                    cout << "Invalid character"<< endl;
                     return false;
                 }
                 

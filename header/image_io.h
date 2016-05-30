@@ -54,6 +54,12 @@ namespace image_io
     bool extract_images(const char* path, std::vector< CImg<>* >& images);
     
     /**
+     * Same action than extract_images, however, from a compressed image, the function
+     * extracts images of dimension SQUARE x SQUARE
+     */
+    bool extract_images_compressed(const char* path, std::vector< CImg<>* >& images);
+    
+    /**
      * Free pointers of the vector
      * @param images Vector of pointers
      */
@@ -67,6 +73,13 @@ namespace image_io
      * @param list  All images to be stored
      */
     void exportAll(const char* path, std::vector< CImg<>* > list);
+    
+    /**
+     * Same action than exportAll, however, compressed the given images in 
+     * only one with dimension SQUARE x SQUARE
+     * All given images must be the same dimension
+     */
+    void exportAll_compressed(const char* path, std::vector< CImg<>* > list);
     
     /**
      * Given a list of images, returns the average image. All images must have

@@ -60,10 +60,10 @@ public:
         memset(transition_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
         memset(start_probability, 0, NUMBER_LETTER*sizeof(double));
         memset(observation_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
-        cout << "Learn on dataset" << endl;
-        learn_observation(dataset, forecast);
         cout << "Learn on dictionary" << endl;
         learn_transition(dictionary);
+        cout << "Learn on dataset" << endl;
+        learn_observation(dataset, forecast);
     };
     
     vector<char> viterbi(vector<char> observed_word);

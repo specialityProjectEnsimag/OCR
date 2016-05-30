@@ -44,6 +44,27 @@ namespace image_io
         return true;
     }
     
+    bool extract_images_compressed(const char* path, std::vector< CImg<>* >& images){
+        directory_iterator end_itr;
+        for(directory_iterator it(path); it != end_itr; ++it) { 
+            if(is_regular_file(it->status())) { 
+                // This is an image
+                CImg<> image(import(it->path().string().c_str()));
+                
+                unsigned int x = 0;
+                while (x + SQUARE < image._width) {
+                    CImg<>* tmp = new CImg<>(image.get_crop(x, x + SQUARE - 1));
+                    images.push_back(tmp);
+                    x += SQUARE;
+                } 
+            } else {
+                // There is a directory at this level
+                return false;
+            }
+        }
+        return true;
+    }
+    
     void delete_images(std::vector< CImg<>* > images) {
         while (!images.empty()) {
             delete images.back();
@@ -60,6 +81,20 @@ namespace image_io
             (*it)->save(ss.str().c_str());
             index++;
         }
+    }
+    
+    void exportAll_compressed(const char* path, std::vector< CImg<>* > list){
+        std::stringstream ss;
+        ss << path << ".png";
+        CImg<> res(list.size()*SQUARE, SQUARE);
+        int x = 0;
+        for(std::vector< CImg<>* >::iterator it = list.begin(); it != list.end(); it++){
+            // create file's name
+            assert((*it)->_height == (*it)->_width && (*it)->_height == SQUARE);
+            res.draw_image(x, **it);
+            x += SQUARE;
+        }
+        res.save(ss.str().c_str());
     }
     
     CImg<> average(std::vector< CImg<>* > list){

@@ -16,14 +16,17 @@ vector<char> HMM::viterbi(vector<char> observed_word) {
         T1[state][0] = start_probability[state]
                 *observation_probability[state][corresponding_int(observed_word.at(0))];
     }
-    
+
     // Computing
     for (unsigned int i = 1; i < length; i++) {
         for (unsigned int statej = 0; statej < NUMBER_LETTER; statej++) {
-            for (unsigned int k = 0; k < length; k++) {
-                int t1ji = T1[k][i - 1] * transition_probability
+            for (unsigned int k = 0; k < NUMBER_LETTER; k++) {
+                double t1ji = T1[k][i-1] * transition_probability
+                                            [k]
                                             [statej]
-                                            [corresponding_int(observed_word.at(i))];
+                                         * observation_probability
+                                            [statej][corresponding_int(observed_word.at(i))]
+                                            ;
                 if (T1[statej][i] < t1ji) {
                     T1[statej][i] = t1ji;
                     T2[statej][i] = k;
@@ -35,13 +38,13 @@ vector<char> HMM::viterbi(vector<char> observed_word) {
     // Solution construction
     int imax = 0;
     for (unsigned int statek = 0; statek < NUMBER_LETTER; statek++) {
-        if (T1[statek][length] > T1[imax][length]) {
+        if (T1[statek][length-1] > T1[imax][length-1]) {
             imax = statek;
         }
     }
     res.push_back(corresponding_char(imax));
     
-    for (unsigned int i = length - 1; i > 0; i--) {
+    for (int i = (int) length-1; i >= 1; i--) {
         res.push_back(corresponding_char(T2[imax][i]));
         imax = T2[imax][i];
     }
@@ -73,7 +76,7 @@ void HMM::print() {
         cout << "(" << corresponding_char(i) << " " << (float) start_probability[i] << ") ";
     }
     
-    cout << "\nTransition" << endl;
+    cout << "\nObservation" << endl;
     printColumns(9, " ");
     for (int i = 0; i < NUMBER_LETTER; i++) {
         printColumns(9, corresponding_char(i));
@@ -150,20 +153,28 @@ void HMM::learn_transition(string dictionary) {
             }
             words++;
         }
+        // Close the dictionary
+        dico.close();
+        
+        int tot_start = 0;
         for (int first = 0; first < NUMBER_LETTER; first++) {
             int tot = 0;
             for (int second = 0; second < NUMBER_LETTER; second++) {
                 tot += transition_probability[first][second];
             }
             if (tot != 0) {
-                // Normalization
+                // Normalization of transition
                 for (int second = 0; second < NUMBER_LETTER; second++) {
                     transition_probability[first][second] /= (double) tot;
                 }
             }
+            tot_start += start_probability[first];
         }
-        // Close the dictionary
-        dico.close();
+
+        // Normalization of start
+        for (int first = 0; first < NUMBER_LETTER; first++) {
+            start_probability[first] /= tot_start;
+        }
         
         // Number transition
         string integer = "0123456789*/-+=.;!?,\"";

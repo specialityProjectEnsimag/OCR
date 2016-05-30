@@ -13,7 +13,7 @@ Forecast::Forecast(string average_dataset) {
             if(is_directory(it->status())) {
                 int k = images.size();
                 // We extract all images WITHOUT ANY PREPROCESSING
-                if (!image_io::extract_images(it->path().string().c_str(), images)) {
+                if (!image_io::extract_images_compressed(it->path().string().c_str(), images)) {
                     std::cout << "Your dataset is corrupted !" << std::endl;
                 }
                 k = images.size() - k;

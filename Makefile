@@ -1,7 +1,7 @@
 CC = g++
 
-GFLAG = -O3 -fopenmp -g -Wall -Wextra -std=c++0x -Iheader/ -lboost_system  -lboost_filesystem  -L/usr/X11R6/lib  -lm  -lpthread  -lX11 
-CLUSTER = -DKNN -DSKELETONIZATION -DCHAMFER
+GFLAG = -O3 -fopenmp -g -Wall -Wextra -std=c++0x -Iheader/ -lboost_system  -lboost_filesystem  -lboost_serialization -L/usr/X11R6/lib  -lm  -lpthread  -lX11 
+CLUSTER = -DKNN
 
 EXEC = ocr
 
@@ -26,9 +26,12 @@ obj/%.o: tests/%.cpp
 exec_test/%: $(OBJ_WITHOUT_MAIN) obj/%.o
 	$(CC) $? $(GFLAG) $(CLUSTER) -o $@
 
-test: $(TEST:tests/%.cpp=obj/%.o) $(TEST:tests/%.cpp=exec_test/%)
+test: cleantest $(TEST:tests/%.cpp=exec_test/%)
 	
-clean:
-	rm -f $(OBJ) $(EXEC) $(TEST:tests/%.cpp=exec_test/%)
+clean: cleantest
+	rm -f $(OBJ) $(EXEC) $(TEST:tests/%.cpp=exec_test/%) $(TEST:tests/%.cpp=obj/%.o)
+
+cleantest:
+	rm -f $(TEST:tests/%.cpp=exec_test/%) $(TEST:tests/%.cpp=obj/%.o)
 
 full: clean all test run

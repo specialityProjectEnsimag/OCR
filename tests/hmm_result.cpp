@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
         boost::archive::text_iarchive ia(ifs);
         ia >> hmm;
     }    
-    
+
     vector<char> res(analyse(argv[1], &forecast));
     cout << "Analyse without hmm : ";
     for (unsigned int i = 0; i < res.size(); i++) {

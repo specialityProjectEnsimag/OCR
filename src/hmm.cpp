@@ -156,6 +156,29 @@ void HMM::learn_transition(string dictionary) {
         // Close the dictionary
         dico.close();
         
+        // Number transition
+        string integer = "0123456789*/-+=.;!?,\"";
+        for (unsigned int current = 0; current < integer.size(); current++) {
+            for (unsigned int next = 0; next < integer.size(); next++) {
+                transition_probability
+                        [corresponding_int(integer[current])]
+                        [corresponding_int(integer[next])] = 1./integer.size();
+            }
+            start_probability[corresponding_int(integer[current])] ++;
+        }
+        
+        // Symbol transition
+        string special = "&#~{}\\";
+        for (unsigned int current = 0; current < special.size(); current++) {
+            for (unsigned int next = 0; next < NUMBER_LETTER; next++) {
+                transition_probability
+                        [corresponding_int(special[current])]
+                        [next] = 1./NUMBER_LETTER;
+            }
+            start_probability[corresponding_int(special[current])] ++;
+        }
+        
+        // Normalization of transition
         int tot_start = 0;
         for (int first = 0; first < NUMBER_LETTER; first++) {
             int tot = 0;
@@ -174,26 +197,6 @@ void HMM::learn_transition(string dictionary) {
         // Normalization of start
         for (int first = 0; first < NUMBER_LETTER; first++) {
             start_probability[first] /= tot_start;
-        }
-        
-        // Number transition
-        string integer = "0123456789*/-+=.;!?,\"";
-        for (unsigned int current = 0; current < integer.size(); current++) {
-            for (unsigned int next = 0; next < integer.size(); next++) {
-                transition_probability
-                        [corresponding_int(integer[current])]
-                        [corresponding_int(integer[next])] = 1./integer.size();
-            }
-        }
-        
-        // Symbol transition
-        string special = "&#~{}\\";
-        for (unsigned int current = 0; current < special.size(); current++) {
-            for (unsigned int next = 0; next < NUMBER_LETTER; next++) {
-                transition_probability
-                        [corresponding_int(special[current])]
-                        [next] = 1./NUMBER_LETTER;
-            }
         }
         
     } else cout << "Unable to open file"; 

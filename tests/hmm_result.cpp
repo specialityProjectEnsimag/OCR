@@ -46,7 +46,6 @@ vector<char> analyse(const char* path, Forecast* f){
        // in order to temporary remove unwanted little pixel
        // will be done with a preprocessing part later
        if(line._width <= 10 || line._height <= 10){
-           cout << "\t Too small" << endl;
            continue;
        }
        splitCharacters(line, lines);
@@ -78,18 +77,21 @@ int main(int argc, char** argv) {
         ia >> hmm;
     }    
 
-    vector<char> res(analyse(argv[1], &forecast));
-    cout << "Analyse without hmm : ";
-    for (unsigned int i = 0; i < res.size(); i++) {
-        cout << res.at(i);
+    for (int img = 1; img < argc; img++) {
+        cout << "Test - " << img << endl;
+        vector<char> res(analyse(argv[img], &forecast));
+        cout << "Analyse without hmm : ";
+        for (unsigned int i = 0; i < res.size(); i++) {
+            cout << res.at(i);
+        }
+        cout << endl;
+        res = hmm.viterbi(res);
+        cout << "Analyse with hmm : ";
+        for (unsigned int i = 0; i < res.size(); i++) {
+            cout << res.at(i);
+        }
+        cout << endl;
     }
-    cout << endl;
-    res = hmm.viterbi(res);
-    cout << "Analyse with hmm : ";
-    for (unsigned int i = 0; i < res.size(); i++) {
-        cout << res.at(i);
-    }
-    cout << endl;
     return (EXIT_SUCCESS);
 }
 

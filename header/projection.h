@@ -101,7 +101,7 @@ namespace projection {
      *  
      * @param vect histogram vector which is the result of either verticalHistogram or
      *              horizontalHistogram
-     * @return [description]
+     * @return The second difference of the given vector
      */
     vector<int> secondDifference(const vector<int>& vect);
 
@@ -118,8 +118,8 @@ namespace projection {
      *                        
      * 
      * 
-     * @param g [description]
-     * @return [description]
+     * @param img
+     * @return vertical histogram once the ANDing is performed
      */
     vector<int> ANDing(const CImg<>& img);
 

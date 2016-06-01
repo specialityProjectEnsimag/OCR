@@ -35,7 +35,7 @@ string analyse(const char* path, Forecast* f){
        for(int j = 0; j < lines.size(); j++){
             CImg<> elt = projection::reduce(lines.at(j)->img).resize(SQUARE,SQUARE);
             std::vector<forecast_type>  res;
-            f->forecast(img, res, MSE);
+            f->forecast(elt, res, MSE);
             std::vector<forecast_type>::iterator i = res.begin();
             output << i->character;
        }

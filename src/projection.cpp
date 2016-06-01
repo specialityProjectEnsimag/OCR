@@ -116,6 +116,8 @@ namespace projection {
     vector<int> secondDifference(const vector<int>& vect){
         vector<int> res(vect.size(), 0);
         res.at(0) = vect.at(0);
+        res.at(res.size() - 1) = vect.at(vect.size() - 1);
+        
         for(unsigned int i = 1; i < (vect.size() - 1); i++){
             res.at(i) = vect.at(i-1) - 2*vect.at(i) + vect.at(i + 1);
         }

@@ -15,14 +15,8 @@
 #include "sliding_window.h"
 #include "overlapping.h"
 
-/**
- *  Fonts' name. When adding a font, you have to make sure to provide one image per serie
- */
-string fonts[] = {"arial", "calibri", "comicSansMS", "corsiva", "droidSerif", "lobster", "roboto", "ubuntu"};
-#define NBFONTS 8
-
 void printHeader(){
-    printColumns(15, ";");
+    printColumns(25, ";");
     printColumns( 9, "Lines;");
     printColumns(16, "Error lines;");
     printColumns( 9, "Ratio;");
@@ -40,7 +34,7 @@ void printHeader(){
  */
 void testSplitStat(const char* fileName, vector<int> charactersPerLine,
                           void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
-                          void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters)){
+                          void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters, double)){
     CImg<> img = image_io::import(fileName);
     display(img);
     CImg<> crop = projection::reduce((img));
@@ -67,8 +61,7 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine,
        vector< text_character* > lines;
        
        CImg<> line = projection::reduce(split.at(i)->img);
-       
-       sCharacters(line, lines);
+       sCharacters(line, lines, -1);
        nCharacterFound += lines.size();
        
        if((int)lines.size() != charactersPerLine.at(i)){
@@ -107,12 +100,12 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine,
 
 void testAll(const char* baseFile, const char* title, std::vector<int> charPerLine,
                       void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
-                      void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters)){
+                      void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters, double)){
     cout << title << endl;
     printHeader();
     for(int i = 0; i < NBFONTS; i++){
         std::stringstream output;
-        printColumns(14, fonts[i] << ";");
+        printColumns(24, fonts[i] << ";");
         output << FOLDER << baseFile << fonts[i] <<".png" ;
         testSplitStat(output.str().c_str(), charPerLine, sLines, sCharacters);
     }

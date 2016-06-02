@@ -36,7 +36,7 @@ namespace overlapping{
      * @param line         The line to split
      * @param characters    List of characters found
      */
-    void splitCharacters(const CImg<>& line, vector< text_character* >& characters);
+    void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double threshold = -1);
 
 }
 

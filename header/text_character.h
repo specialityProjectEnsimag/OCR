@@ -22,6 +22,11 @@ public:
 	*/
 	CImg<> img;
 
+	/**
+	 * If set to true, means that it is the word's last character
+	 */
+	bool endOfWords;
+
 	text_character(CImg<> image);
 	text_character(const text_character& orig);
 	~text_character();

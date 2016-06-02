@@ -56,3 +56,24 @@ using namespace std;
 
 #endif	/* BASE_TEST_SEGMENTATION_H */
 
+/**
+ *  Fonts' name. When adding a font, you have to make sure to provide one image per serie
+ */
+string fonts[] = {"anonymousPro", "arial", "calibri", "consolas", "comicSansMS", 
+							"droidSerif", "impact", "roboto", 
+							"timesNewRoman", "ubuntu", "VT323", "architectDaughter", "corsiva", "courgette","coveredByYourGrace", 
+						"dancingScript", "indieFlower", "lobster", "shadowsIntoLight"};
+
+#define NBFONTS 19
+
+
+string fontsNonCursive[] = {"anonymousPro", "arial", "calibri", "consolas", "comicSansMS", 
+							"droidSerif", "impact", "roboto", 
+							"timesNewRoman", "ubuntu", "VT323"};
+
+#define NBFONTS_NON_CURSIVE 11
+
+
+string fontsCursive[] = {"architectDaughter", "corsiva", "courgette","coveredByYourGrace", 
+						"dancingScript", "indieFlower", "lobster", "shadowsIntoLight"};
+#define NBFONTS_CURSIVE 8

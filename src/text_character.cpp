@@ -1,6 +1,7 @@
 #include "text_character.h"
 
 text_character::text_character(CImg<> image) : img(image) {
+	endOfWords = false;
 }
 
 text_character::~text_character() {

@@ -31,11 +31,13 @@ namespace sliding_window{
     void splitLines(const CImg<>& text, vector< text_line* >& lines);
 
     /**
-     * Given a line split into characters
+     * Given a line split into characters. When wordThreshold is given, will add information about
+     * whether the character is the last of a word of not.
      * @param line         The line to split
      * @param characters    List of characters found
+     * @param wordThreshold Threshold value to detect word, default to -1 (don't look for words)
      */
-    void splitCharacters(const CImg<>& line, vector< text_character* >& characters);
+    void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double wordThreshold = -1);
 
 }
 

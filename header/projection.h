@@ -14,6 +14,7 @@
 #include "CImg.h"
 #include <stdlib.h>
 #include "overlappingSegmentation.h"
+#include "text_character.h"
 
 using namespace cimg_library;
 using namespace std;
@@ -76,6 +77,14 @@ namespace projection {
      * @return The same image without the white borders
      */
     CImg<> reduce(CImg<> img);
+    
+    /**
+     * Reduces the image to its core content. Remove all unecessary white borders
+     * And updates the position of the character
+     * @param img The image to reduce
+     * @return The same image with the position indocator
+     */
+    text_character reduce(const text_character& img_char, int up, int low);
 
     /**
      * Counts the number of black pixel on each column and put the result
@@ -104,7 +113,7 @@ namespace projection {
      * @return [description]
      */
     vector<int> secondDifference(const vector<int>& vect);
-
+    
     /**
      * Implementation of the ANDing algorithm as described in: 
      *      Major components of a complete text reading system

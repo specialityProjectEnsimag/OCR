@@ -129,6 +129,57 @@ void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, co
 }
 #endif
 
+void select( const vector< CImg<>* >& average, const vector<char>& labels, vector< CImg<>* >& sub_average, vector<char>& sub_labels, string s) {
+    assert(average.size() == labels.size());
+    int length = labels.size();
+    for (unsigned int char_number = 0; char_number < s.size(); char_number++) {
+        int l = 0;
+        while (l < length) {
+            if (s[char_number] == labels[l]) {
+                sub_average.push_back(average[l]);
+                sub_labels.push_back(labels[l]);
+            }
+            l++;
+        }
+    }
+}
+
+void Forecast::forecast(const text_character& image, vector<forecast_type>& res, const vector< CImg<>* >& average, const vector<char>& labels,double (*dist)(const CImg<>&, const CImg<>&)) {
+    vector< CImg<>* > sub_average;
+    vector<char> sub_labels;
+    string characters;
+    switch(image.upLow) {
+        case -1:
+            // Do not know what to do
+            sub_average = average;
+            sub_labels = labels;
+            break;
+        case 0:
+            // Up
+            characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZtidfhkl?/!\\(){}&*0123456789"; 
+            select(average, labels, sub_average, sub_labels, characters);
+            break;
+        case 1:
+            // Middle
+            characters = "azeruosmwxcvn;:+-"; 
+            select(average, labels, sub_average, sub_labels, characters);
+            break;
+        case 2:
+            // Low
+            characters = "ypqgj"; 
+            select(average, labels, sub_average, sub_labels, characters);
+            break;
+        case 3:
+            // Ponctuation
+            characters = ".,"; 
+            select(average, labels, sub_average, sub_labels, characters);
+            break;
+        default:
+            throw invalid_argument("forecast : No character of this type");
+    }
+    forecast(image.img, res, sub_average, sub_labels, dist);
+}
+
 int Forecast::indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(const CImg<>&, const CImg<>&)) {
     int length = average.size();
     double probability[length];

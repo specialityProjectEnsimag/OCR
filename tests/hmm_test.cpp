@@ -13,7 +13,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-int main(int argc, char** argv) {
+int main() {
     kmeans("./dataset", "./result");
     Forecast forecast("./result");
     HMM hmm = HMM("./dataset", "./dictionnary.txt", forecast);

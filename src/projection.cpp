@@ -82,6 +82,45 @@ namespace projection {
             return img.get_crop(upB, leftB, upE, leftE);            
         }
     }
+    
+    text_character reduce(const text_character& img_char, int up_barrier, int low_barrier) {
+        text_character img_char_res(img_char);
+        vector<int> up = upward(img_char_res.img);
+        int upB = firstNonEqual(up, img_char_res.img._height);
+        int upE = firstNonEqual(up, img_char_res.img._height, false);
+
+        vector<int> left = leftward(img_char_res.img);
+        int leftB = firstNonEqual(left, img_char_res.img._width);
+        int leftE = firstNonEqual(left, img_char_res.img._width, false);
+        
+        if (leftB != 0) {
+            if (leftB < up_barrier) {
+                // It is an upper case or a does not know
+                img_char_res.upLow = 0;
+            } else {
+                // It is a middle or low case or ponctutation
+                img_char_res.upLow = 1;
+            }
+        }
+        
+        if (leftE > low_barrier && leftE != (int) img_char_res.img._height - 1) {
+            // It is a low case or a does not know
+            if (img_char_res.upLow == 1) {
+                img_char_res.upLow = 2;
+            } else {
+                img_char_res.upLow = -1;
+            }
+        }
+        
+        if (leftE - leftB < 0.5*(low_barrier-up_barrier)) {
+            // It is a ponctuation
+            img_char_res.upLow = 3;
+        }
+        
+        img_char_res.img.crop(upB, leftB, upE, leftE);
+        
+        return img_char_res;            
+    }
 
     vector<int> verticalHistogram(const CImg<>& img){
         vector<int> hist(img._width, 0);
@@ -99,7 +138,7 @@ namespace projection {
     }
 
     vector<int> horizontalHistogram(const CImg<>& img){
-        vector<int> hist(img._width, 0);
+        vector<int> hist(img._height, 0);
         cimg_forY(img, y){
             int count = 0;
             for(unsigned int x = 0; x <img._width; x++){
@@ -122,7 +161,7 @@ namespace projection {
 
         return res;
     }
-
+    
     vector<int> ANDing(const CImg<>& img){
         CImg<> imgAND(img._width, img._height, 1, 1, 255);
         for(unsigned x = 0; x < (img._width - 1); x++){

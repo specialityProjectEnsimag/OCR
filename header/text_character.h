@@ -21,8 +21,19 @@ public:
 	*	The image that representes the current character
 	*/
 	CImg<> img;
-
+        
+        /** 
+         *  Upper and lower case
+         * -1 => Do not know
+         * 0  => Upper
+         * 1  => Middle
+         * 2  => Lower
+         * 3  => Ponctuation
+         */
+        int upLow;
+        
 	text_character(CImg<> image);
+        text_character(CImg<> image, int position);
 	text_character(const text_character& orig);
 	~text_character();
 

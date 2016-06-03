@@ -34,14 +34,14 @@ class HMM {
     double observation_probability[NUMBER_LETTER][NUMBER_LETTER];
     
     template<class Archive>
-    void save(Archive & ar, const unsigned int version) const
+    void save(Archive & ar, const unsigned int /*version*/) const
     {
         ar  & transition_probability;
         ar  & start_probability;
         ar  & observation_probability;
     }
     template<class Archive>
-    void load(Archive & ar, const unsigned int version)
+    void load(Archive & ar, const unsigned int /*version*/)
     {
         ar  & transition_probability;
         ar  & start_probability;

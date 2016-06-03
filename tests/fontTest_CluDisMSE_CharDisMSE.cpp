@@ -19,7 +19,7 @@ string analyse(const char* path, Forecast* f){
     vector< text_line* > split;
     splitLines(crop, split);    
 
-    for(int i = 0; i < split.size(); i++){
+    for(unsigned int i = 0; i < split.size(); i++){
        vector< text_character* > lines;
        CImg<> line = projection::reduce(split.at(i)->img);
        
@@ -32,7 +32,7 @@ string analyse(const char* path, Forecast* f){
        splitCharacters(line, lines);
 
 
-       for(int j = 0; j < lines.size(); j++){
+       for(unsigned int j = 0; j < lines.size(); j++){
             CImg<> elt = projection::reduce(lines.at(j)->img).resize(SQUARE,SQUARE);
             std::vector<forecast_type>  res;
             f->forecast(elt, res, MSE);

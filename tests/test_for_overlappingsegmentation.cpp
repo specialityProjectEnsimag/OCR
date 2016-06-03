@@ -480,7 +480,7 @@ void testSplitCharLine(){
     assert(right._height == 150);
     
     // take only the bottom left square
-    for(int i = 0; i < img._height / 2; i++){
+    for(unsigned int i = 0; i < img._height / 2; i++){
         split.at(i) = 0;
     }
     

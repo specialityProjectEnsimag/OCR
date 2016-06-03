@@ -64,7 +64,7 @@ void testSplitStat(const char* fileName, vector<int> wordsPerLine){
        sliding_window::splitCharacters(line, lines, res);
 
        int nWordsOnLine = 0;
-       for(int j = 0; j < lines.size(); j++){
+       for(unsigned int j = 0; j < lines.size(); j++){
        		if(lines[j]->endOfWords){
        			nWordsOnLine ++;
        			// cout << "End of words !" << endl;

@@ -13,7 +13,7 @@ namespace overlapping{
         sliding_window::splitLines(text, lines);
     }
 
-    void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double threshold){
+    void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double /*threshold*/){
         CImg<> img(line);
         CImg<> left, right;
         

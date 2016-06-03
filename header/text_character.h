@@ -26,8 +26,19 @@ public:
 	 * If set to true, means that it is the word's last character
 	 */
 	bool endOfWords;
+        
+        /** 
+         *  Upper and lower case
+         * -1 => Do not know
+         * 0  => Upper
+         * 1  => Middle
+         * 2  => Lower
+         * 3  => Ponctuation
+         */
+        int upLow;
 
 	text_character(CImg<> image);
+        text_character(CImg<> image, int position);
 	text_character(const text_character& orig);
 	~text_character();
 

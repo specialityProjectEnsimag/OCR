@@ -13,7 +13,7 @@ using namespace boost::filesystem;
 #include "forecast.h"
 using namespace std;
 
-int main(int argc, char** argv) {
+int main() {
     path path("dataset");
     int tab[NUMBER_LETTER];
     

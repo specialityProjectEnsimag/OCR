@@ -8,6 +8,8 @@
  * 
  */
 
+#include "projection.h"
+
 #include "CImg.h"
 using namespace cimg_library;
 
@@ -20,7 +22,10 @@ using namespace std;
 
 class text_line {
 public:
-	CImg<> img;
+    CImg<> img;
+    
+    int up_barrier;
+    int low_barrier;
 
     text_line(CImg<> image);
     text_line(const text_line& orig);
@@ -29,6 +34,14 @@ public:
     static void freeVector(vector< text_line*>& vect);
 
 private:
+    /**
+     * Computes the up and low barriers of the line
+     * 
+     * @param img   The line in black and white
+     * @param up    The result of up barrier
+     * @param low   The reuslt of low barrier
+     */
+    void upAndLow(const CImg<>& img, int& up, int& low);
 
 };
 

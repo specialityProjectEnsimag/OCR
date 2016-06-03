@@ -15,6 +15,7 @@
 
 #include "dataset.h"
 #include "image_io.h"
+#include "text_character.h"
 #include "clustering_data.h"
 
 #include "boost/filesystem.hpp"
@@ -58,6 +59,25 @@ class Forecast {
         void forecast(const CImg<>& image, vector<forecast_type>& res, double (*dist)(const CImg<>&, const CImg<>&)){
             forecast(image, res, this->images, this->labels, dist);
         }
+        
+        /**
+         * Computes the probability of each images given in average for the image
+         * With upper and lower cases taking in account
+         * @param image     The image that we study
+         * @param average   The different average images to compare
+         * @param labels   The labels of the different average
+         * @param res       The result of the computing
+         * @param dist      The ditance to use
+         */
+        static void forecast(const text_character& image, vector<forecast_type>& res, const vector< CImg<>* >& average, const vector<char>& labels,double (*dist)(const CImg<>&, const CImg<>&));
+
+        /**
+         * Computes the same vector but uses images and labels of the object
+         */
+        void forecast(const text_character& image, vector<forecast_type>& res, double (*dist)(const CImg<>&, const CImg<>&)){
+            forecast(image, res, this->images, this->labels, dist);
+        }
+        
         
         /**
          * Computes the most probable image 

@@ -1,13 +1,6 @@
-/* 
- * File:   Utils.h
- * Author: clinm
- *
- * Useful methods to deal with images
- * Created on 17 mai 2016, 13:50
- */
 
 #ifndef IMAGEIO_H
-#define	IMAGEIO_H
+#define IMAGEIO_H
 
 #define SQUARE 64
 
@@ -26,6 +19,13 @@ using namespace cimg_library;
 #define BLACK_PIXEL 0
 #define WHITE_PIXEL 255
 
+/** 
+ * File:   image_io.h
+ * Author: clinm
+ *
+ * Useful methods to deal with images
+ * Created on 17 mai 2016, 13:50
+ */
 namespace image_io 
 {
     

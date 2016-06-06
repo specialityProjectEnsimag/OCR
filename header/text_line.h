@@ -1,12 +1,3 @@
-/* 
- * File:   text_line.h
- * Author: clinm
- *
- * Created on 26 mai 2016, 09:35
- * 
- * This class contains all information related to lines
- * 
- */
 
 #include "projection.h"
 
@@ -17,9 +8,18 @@ using namespace cimg_library;
 using namespace std;
 
 #ifndef TEXT_LINE_H
-#define	TEXT_LINE_H
+#define TEXT_LINE_H
 
 
+/** 
+ * File:   text_line.h
+ * Author: clinm
+ *
+ * Created on 26 mai 2016, 09:35
+ * 
+ * This class contains all information related to lines
+ * 
+ */
 class text_line {
 public:
     CImg<> img;

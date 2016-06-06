@@ -8,3 +8,4 @@ dataset/
 result_dataset/
 *.o
 exec_test/
+docs/

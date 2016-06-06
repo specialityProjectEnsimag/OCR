@@ -24,6 +24,7 @@ namespace overlappingSegmentation
      *      -> pull back and try left only 
      * 
      * @param img       The image to go through
+     * @param path
      * @param x         Current position on x
      * @param y         Current position on y
      * @param right     See explanation above
@@ -194,10 +195,11 @@ namespace overlappingSegmentation
      *      -> pull back and try right only 
      * 
      * @param img
+     * @param path
      * @param x
      * @param y
-     * @param right
-     * @return 
+     * @param left
+     * @param solution
      */
     void moveToBottomInternal(const CImg<>& img,
                                 sol& path,

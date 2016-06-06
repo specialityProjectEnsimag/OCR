@@ -1,9 +1,3 @@
-/* 
- * File:   chamfer.h
- * Author: jeanselv
- *
- * Created on 24 mai 2016, 10:04
- */
 
 #ifndef CHAMFER_H
 #define	CHAMFER_H
@@ -18,6 +12,12 @@ using namespace std;
 #define BLACK_PIXEL 0
 #define WHITE_PIXEL 255
 
+/** 
+ * File:   chamfer.h
+ * Author: jeanselv
+ *
+ * Created on 24 mai 2016, 10:04
+ */
 namespace chamfer 
 {
     /**

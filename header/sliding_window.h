@@ -1,4 +1,4 @@
-/* 
+/** 
  * File:   sliding_window.h
  * Author: clinm
  *

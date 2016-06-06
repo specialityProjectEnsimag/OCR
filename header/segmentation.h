@@ -1,3 +1,10 @@
+/**
+ * File:   segmentation.h
+ * Author: clinm
+ * 
+ * Algorithm using the more advanced implementation so far. By mixing both sliding_window and
+ * overlapping segmentation we are able to split quicly both lines and characters.
+ */
 #include "CImg.h"
 #include "text_line.h"
 #include "text_character.h"

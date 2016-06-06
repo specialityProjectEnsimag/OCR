@@ -35,3 +35,9 @@ cleantest:
 	rm -f $(TEST:tests/%.cpp=exec_test/%) $(TEST:tests/%.cpp=obj/%.o)
 
 full: clean all test run
+
+doc:
+	doxygen Doxyfile
+
+cleanDoc:
+	rm -rf ./docs

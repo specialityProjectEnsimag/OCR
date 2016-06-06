@@ -381,8 +381,8 @@ namespace overlappingSegmentation
                 }
             }
         }
-        right = projection::reduce(right);
-        left = projection::reduce(left);
+        right = projection::reduceHorizontal(right);
+        left = projection::reduceHorizontal(left);
     }
     
     //already reduced !

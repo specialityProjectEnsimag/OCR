@@ -14,6 +14,7 @@
 #include "text_line.h"
 #include "sliding_window.h"
 #include "overlapping.h"
+#include "segmentation.h"
 
 void printHeader(){
     printColumns(25, ";");
@@ -119,6 +120,7 @@ int main() {
     
     testAll("text-1-", "Sliding window", charPerLine, sliding_window::splitLines, sliding_window::splitCharacters);
     testAll("text-1-", "Overlapping segmentation", charPerLine, sliding_window::splitLines, overlapping::splitCharacters);
+    testAll("text-1-", "Segmentation", charPerLine, segmentation::splitLines, segmentation::splitCharacters);
     
        
    

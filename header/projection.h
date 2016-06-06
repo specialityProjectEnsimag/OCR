@@ -79,6 +79,14 @@ namespace projection {
     CImg<> reduce(CImg<> img);
     
     /**
+     *  Reduce the image but only the width 
+     * @param img
+     * @return 
+     */
+    CImg<> reduceHorizontal(const CImg<>& img);
+
+
+    /**
      * Reduces the image to its core content. Remove all unecessary white borders
      * And updates the position of the character
      * @param img The image to reduce

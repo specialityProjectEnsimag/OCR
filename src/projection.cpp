@@ -82,6 +82,20 @@ namespace projection {
             return img.get_crop(upB, leftB, upE, leftE);            
         }
     }
+
+    CImg<> reduceHorizontal(const CImg<>& img){
+        vector<int> up = upward(img);
+        int upB = firstNonEqual(up, img._height);
+        int upE = firstNonEqual(up, img._height, false);
+
+        if(upB == (int) img._width){
+            return CImg<>(1, 1, 1, 1, 255);
+        }else{
+            return img.get_crop(upB, upE);
+        } 
+    }
+
+
     
     text_character reduce(const text_character& img_char, int up_barrier, int low_barrier) {
         text_character img_char_res(img_char);

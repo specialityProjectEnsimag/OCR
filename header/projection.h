@@ -54,8 +54,8 @@ namespace projection {
     /**
      * Displays the projection as an image. The number of white pixels are displayed
      * in black and the 'shadow' of the form remains in white
-     * @param left      The up projection of the image
-     * @param width     Its width (in order to keep the image's dimension
+     * @param top       The up projection of the image
+     * @param height    Its width (in order to keep the image's dimension
      * @return          An image representing the shadow
      */
     CImg<> upwardToImg(vector<int> top, int height);
@@ -81,7 +81,9 @@ namespace projection {
     /**
      * Reduces the image to its core content. Remove all unecessary white borders
      * And updates the position of the character
-     * @param img The image to reduce
+     * @param img_char  The image to reduce
+     * @param up        The up case barrier
+     * @param low       The low case barrier
      * @return The same image with the position indocator
      */
     text_character reduce(const text_character& img_char, int up, int low);

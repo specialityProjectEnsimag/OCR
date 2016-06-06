@@ -1,4 +1,5 @@
 #include "preprocessing.h"
+#include "image_io.h"
 
 namespace preprocessing 
 {
@@ -220,6 +221,76 @@ namespace preprocessing
         }
 
         return res;
+    }
+    
+    CImg<> rotate(const CImg<>& src, double angle) {
+        float angle_mod = angle;
+        double c = cos(angle_mod/180.0*PI);
+        double s = sin(angle_mod/180.0*PI);
+        double h = abs(c*src.height()) + abs(s*src.width());
+        double w = abs(s*src.height()) + abs(c*src.width());
+        
+        // Create a copy
+        CImg<> res((int) w, (int) h, src._depth, src._spectrum, WHITE_PIXEL);
+
+        // Compute the rotation      
+        cimg_forXY(res, x, y) {
+            float i = src._width/2. + (x -w/2.)*c + (y -h/2.)*s; 
+            float j = src._height/2 + (y -h/2.)*c - (x -w/2.)*s;
+            if (0 <= i && i < src.width() && 0 <= j && j < src.height())
+                res(x,y) = src.linear_atXYZC(i,j);
+        }
+        return res;
+    }
+    
+    CImg<> hough_rotation(const CImg<>& src,const double deg_min, const double deg_max, const int step) {
+        // We major the possible line to the width of the image
+        int hypo = sqrt(pow(src.width(),2) + pow(src.height(),2));
+        CImg<> hough(step, hypo, 1, 1, 0);
+        double dth = (deg_max - deg_min) / step;
+        
+        int max_color = 0;
+        cimg_forXY(src, x, y) {
+            if (src(x,y) != WHITE_PIXEL) {
+                for (int s = 0; s < step; s++) {
+                    double th = deg_min + s * dth;
+                    int r = (int) (x*cos(th*PI/180) + y*sin(th*PI/180));
+                    if (0 <= r && r < hypo) {
+                        hough(s, r) += 1;
+                        if (hough(s, r) > max_color) {
+                            max_color = hough(s, r);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Compute the angle of rotation
+        int angle[step];
+        int dark[step];
+        int max = 0;
+        bool active = true;
+        memset(angle, 0, sizeof(int)*step);
+        cimg_forX(hough, x) {
+            active = true;
+            cimg_forY(hough, y) {
+                if (hough(x,y) > 0.5*max_color && active) {
+                    angle[x] ++;
+                    active = false;
+                    if (angle[x] > angle[max]) {
+                        max = x;
+                    } else if (angle[x] == angle[max] && dark[x] > dark[max]) {
+                        max = x;
+                    }
+                } else if (hough(x,y) < 0.1*max_color) {
+                    active = true;
+                    dark[x] ++;
+                }
+            }
+        }
+       
+        // Rotation
+        return rotate(src,90-(deg_min + max*dth));
     }
     
      void preprocessing(CImg<>& image){

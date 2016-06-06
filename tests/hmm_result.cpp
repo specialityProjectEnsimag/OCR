@@ -28,8 +28,8 @@ using namespace boost::filesystem;
 using namespace cimg_library;
 using namespace std;
 
-vector<char> analyse(const char* path, Forecast* f){
-    vector<char> output;
+vector<forecast_type> analyse(const char* path, Forecast* f){
+    vector<forecast_type> output;
     
     CImg<> img = image_io::import(path);
     CImg<> crop = projection::reduce(img); 
@@ -56,7 +56,7 @@ vector<char> analyse(const char* path, Forecast* f){
             std::vector<forecast_type>  res;
             f->forecast(elt, res, MSE);
             std::vector<forecast_type>::iterator i = res.begin();
-            output.push_back(i->character);
+            output.push_back(*i);
        }
        text_character::freeVector(lines);
     }
@@ -79,16 +79,16 @@ int main(int argc, char** argv) {
 
     for (int img = 1; img < argc; img++) {
         cout << "Test - " << img << endl;
-        vector<char> res(analyse(argv[img], &forecast));
+        vector<forecast_type> res(analyse(argv[img], &forecast));
         cout << "Analyse without hmm : ";
         for (unsigned int i = 0; i < res.size(); i++) {
-            cout << res.at(i);
+            cout << res.at(i).character;
         }
         cout << endl;
-        res = hmm.viterbi(res);
+        vector<char> end = hmm.viterbi(res);
         cout << "Analyse with hmm : ";
         for (unsigned int i = 0; i < res.size(); i++) {
-            cout << res.at(i);
+            cout << end.at(i);
         }
         cout << endl;
     }

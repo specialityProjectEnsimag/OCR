@@ -1,6 +1,6 @@
 #include "hmm.h"
 
-vector<char> HMM::viterbi(vector<char> observed_word) {
+vector<char> HMM::viterbi(vector<forecast_type> observed_word) {
     if (observed_word.size() == 0) {
         return vector<char>();
     }
@@ -14,7 +14,7 @@ vector<char> HMM::viterbi(vector<char> observed_word) {
     memset(T2, 0,NUMBER_LETTER*length*sizeof(double));
     for (unsigned int state = 0; state < NUMBER_LETTER; state++) {
         T1[state][0] = start_probability[state]
-                *observation_probability[state][corresponding_int(observed_word.at(0))];
+                *observation_probability[state][corresponding_int(observed_word.at(0).character) + NUMBER_LETTER*(observed_word.at(0).upLow+1)];
     }
 
     // Computing
@@ -25,7 +25,7 @@ vector<char> HMM::viterbi(vector<char> observed_word) {
                                             [k]
                                             [statej]
                                          * observation_probability
-                                            [statej][corresponding_int(observed_word.at(i))]
+                                            [statej][corresponding_int(observed_word.at(i).character) + NUMBER_LETTER*(observed_word.at(i).upLow+1)]
                                             ;
                 if (T1[statej][i] < t1ji) {
                     T1[statej][i] = t1ji;
@@ -109,16 +109,18 @@ void HMM::learn_observation(string dataset, Forecast& forecast) {
                 for (vector< CImg<>* >::iterator img = images.begin();
                         img != images.end();
                         ++img) {
-                    vector<forecast_type> prediction;
-                    forecast.forecast(**img, prediction, MSE);
                     int letter = corresponding_int(corresponding_label(it->filename()));
-                    for (vector<forecast_type>::iterator res = prediction.begin();
-                            res != prediction.end();
-                            ++res) {
-                        this->observation_probability
-                                [corresponding_int(res->character)]
-                                [letter]
-                                += res->probability/images.size();
+                    for (int i = -1; i < 4; i++) {
+                        vector<forecast_type> prediction;
+                        forecast.forecast(text_character(**img,i), prediction, MSE);  
+                        for (vector<forecast_type>::iterator res = prediction.begin();
+                                res != prediction.end();
+                                ++res) {
+                            this->observation_probability
+                                    [corresponding_int(res->character)]
+                                    [letter + NUMBER_LETTER*(i+1)]
+                                    += res->probability/images.size();
+                        }
                     }
                 }
             }

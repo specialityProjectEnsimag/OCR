@@ -31,7 +31,7 @@ class HMM {
     // The probability that a word begins with a given letter
     double start_probability[NUMBER_LETTER];
     // The probability of the observation given the hidden letter
-    double observation_probability[NUMBER_LETTER][NUMBER_LETTER];
+    double observation_probability[NUMBER_LETTER][NUMBER_LETTER*5];
     
     template<class Archive>
     void save(Archive & ar, const unsigned int /*version*/) const
@@ -53,20 +53,20 @@ public:
     HMM() {
         memset(transition_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
         memset(start_probability, 0, NUMBER_LETTER*sizeof(double));
-        memset(observation_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
+        memset(observation_probability, 0, 5*NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
     };
     
     HMM(string dataset, string dictionary, Forecast& forecast) {
         memset(transition_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
         memset(start_probability, 0, NUMBER_LETTER*sizeof(double));
-        memset(observation_probability, 0, NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
+        memset(observation_probability, 0, 5*NUMBER_LETTER*NUMBER_LETTER*sizeof(double));
         cout << "Learn on dictionary" << endl;
         learn_transition(dictionary);
         cout << "Learn on dataset" << endl;
         learn_observation(dataset, forecast);
     };
     
-    vector<char> viterbi(vector<char> observed_word);
+    vector<char> viterbi(vector<forecast_type> observed_word);
     
     void print();
     

@@ -29,6 +29,7 @@ using namespace boost::filesystem;
 
 struct forecast_type {
   double probability;
+  int upLow;
   char character;
   bool operator>(const forecast_type& other) const { return other.probability < probability; }
   bool operator<(const forecast_type& other) const { return other.probability > probability; }

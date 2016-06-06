@@ -59,6 +59,7 @@ void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, co
         if (j == res.end()) {
             forecast_type obj;
             obj.probability = 1;
+            obj.upLow = -1;
             obj.character = i->character;
             res.push_back(obj);
         }
@@ -120,6 +121,7 @@ void Forecast::forecast(const CImg<>& image, std::vector<forecast_type>& res, co
         forecast_type obj;
         obj.probability = probability[i];
         obj.character = labels[i];
+        obj.upLow = -1;
         res.push_back(obj);
     }
     
@@ -178,6 +180,11 @@ void Forecast::forecast(const text_character& image, vector<forecast_type>& res,
             throw invalid_argument("forecast : No character of this type");
     }
     forecast(image.img, res, sub_average, sub_labels, dist);
+    if (image.upLow != -1) {
+        for (unsigned int l = 0; l < res.size(); l ++) {
+            res[l].upLow = image.upLow;
+        }
+    }
 }
 
 int Forecast::indexOfClosest(const CImg<>& image, const vector< CImg<>* >& average, double (*dist)(const CImg<>&, const CImg<>&)) {

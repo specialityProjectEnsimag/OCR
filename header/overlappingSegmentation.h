@@ -3,6 +3,7 @@
 
 #include "image_io.h"
 #include <vector>
+#include "projection.h"
 
 #include "CImg.h"
 using namespace cimg_library;
@@ -195,9 +196,17 @@ namespace overlappingSegmentation
      * @param x     x coordinate, at the beginning contains the starting point
      * @param y     y coordinate, at the beginning contains the starting point
      */
-    void goThrough(const CImg<>& img, int& x, const int& y);
+    void goThroughRight(const CImg<>& img, int& x, const int& y);
     
-    
+    /**
+     * Go throught the left and give the location of the first white pixel
+     * @param img
+     * @param x     x coordinate, at the beginning contains the starting point
+     * @param y     y coordinate, at the beginning contains the starting point
+     */
+    void goThroughLeft(const CImg<>& img, int& x, const int& y);    
+
+
     /**
      * Divides the source image into two subimages following the line
      * of x coordinates (from top to buttom)

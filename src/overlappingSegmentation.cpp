@@ -96,7 +96,7 @@ namespace overlappingSegmentation
                     int x, 
                     int y, 
                     vector<int>& solution){
-        
+
         moveToTopInternal(img, path, x, y, true, solution);
         if(!path.found){
             moveToTopInternal(img, path, x, y, false, solution);
@@ -117,6 +117,12 @@ namespace overlappingSegmentation
         }else if(x > 0 && img(x-1, y) == WHITE_PIXEL){
             // keep going to the left
             moveTopLeft(img, path, x-1, y, solution);
+        }else{
+            // obstacle
+            x--;
+            goThroughLeft(img, x, y);
+            path = {false, x, y, path.rx, path.ry};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -134,6 +140,12 @@ namespace overlappingSegmentation
         }else if(x < (int)(img._width - 1) && img(x+1, y) == WHITE_PIXEL){
             // keep going to the right
             moveTopRight(img, path, x+1, y, solution);
+        }else{
+            // obstacle
+            x++;
+            goThroughRight(img, x, y);
+            path = {false, path.lx, path.ly, x, y};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -155,7 +167,10 @@ namespace overlappingSegmentation
             moveTopLeft(img, path, x, y, solution);
         }else{
             // means that (x, y) is a black pixel, so sets the pixel before
-            path = {false, x + 1, y, path.rx, path.ry};
+            x--;
+            goThroughLeft(img, x, y);
+            path = {false, x, y, path.rx, path.ry};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -179,7 +194,9 @@ namespace overlappingSegmentation
             moveTopRight(img, path, x, y, solution);
         }else{
             // means that (x, y) is a black pixel, so sets the pixel before
-            path = {false, path.lx, path.ly, x - 1, y};
+            x++;
+            goThroughRight(img, x, y);
+            path = {false, path.lx, path.ly, x, y};
         }
     }
     
@@ -276,6 +293,11 @@ namespace overlappingSegmentation
         }else if(x > 0 && img(x-1, y) == WHITE_PIXEL){
             // keep going to the left
             moveBottomLeft(img, path, x-1, y, solution);
+        }else{
+            x--;
+            goThroughLeft(img, x, y);
+            path = {false, x, y, path.rx, path.ry};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -297,7 +319,10 @@ namespace overlappingSegmentation
             moveBottomRight(img, path, x+1, y, solution);
         }else{
             // blocked by a black pixel
+            x++;
+            goThroughRight(img, x, y);
             path = {false, path.lx, path.ly, x, y};
+            colorIfDebug(img, x, y);            
         }
     }
     
@@ -318,7 +343,10 @@ namespace overlappingSegmentation
             // keep going to the left looking for a way to go up
             moveBottomLeft(img, path, x, y, solution);
         }else{
-            path = {false, x + 1, y, path.rx, path.ry};
+            x--;
+            goThroughLeft(img, x, y);
+            path = {false, x, y, path.rx, path.ry};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -341,7 +369,10 @@ namespace overlappingSegmentation
             // keep going to the right looking for a way to go up
             moveBottomRight(img, path, x, y, solution);
         }else{
-            path = {false, path.lx, path.ly, x - 1, y};
+            x++;
+            goThroughRight(img, x, y);
+            path = {false, path.lx, path.ly, x, y};
+            colorIfDebug(img, x, y);
         }
     }
     
@@ -363,12 +394,18 @@ namespace overlappingSegmentation
     }
     
     
-    void goThrough(const CImg<>& img, int& x, const int& y){
+    void goThroughRight(const CImg<>& img, int& x, const int& y){
         while(x < (int)(img._width - 1) && img(x, y) != WHITE_PIXEL){
             x++;
         }
     }
     
+    void goThroughLeft(const CImg<>& img, int& x, const int& y){
+        while(x >= 0 && img(x, y) != WHITE_PIXEL){
+            x--;
+        }
+    }
+
     
     void splitCharLine(const CImg<>& img, CImg<>& left, CImg<>& right, const vector<int>& line){
         left = CImg<>(img._width, img._height, 1, 1, 255);
@@ -394,8 +431,8 @@ namespace overlappingSegmentation
         bool cutSucceed = false;
         int x, y;
         locateLastBlackPixel(img, x, y);
-        goThrough(img, x, y);
-        
+
+        goThroughRight(img, x, y);
         while(!cutSucceed){
             moveToTop(img, path, x, y, split);
             if(path.found){
@@ -404,12 +441,17 @@ namespace overlappingSegmentation
                 if(path.found){
                     cutSucceed = true;
                 }else{
+                    x = path.rx;
+                    y = path.ry;
                     x++;
-                    goThrough(img, x, y);
+                    goThroughRight(img, x, y);
                 }
             }else{
+                x = path.rx;
+                y = path.ry;
+
                 x++;
-                goThrough(img, x, y);
+                goThroughRight(img, x, y);
             }
         }
         splitCharLine(img, first, remaining, split);

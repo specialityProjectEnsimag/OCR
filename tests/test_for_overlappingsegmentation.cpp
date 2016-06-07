@@ -76,7 +76,7 @@ void testNoPathTopLeft(){
     moveTopLeft(img, res, 50, 10, solution);
     displayIfDebug(colored);
 
-    assert(areEquals(res, {false, 10, 10, -1, -1}));
+    assert(areEquals(res, {false, -1, 10, -1, -1}));
 
     img = CImg<>(FOLDER "no_path_to_left_2.png");
     initTrace(img);
@@ -85,7 +85,7 @@ void testNoPathTopLeft(){
     
     moveTopLeft(img, res, 50, 10, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 0, 10, -1, -1}));
+    assert(areEquals(res, {false, -1, 10, -1, -1}));
     
 }
 
@@ -129,7 +129,7 @@ void testNoPathTopRight(){
     
     moveTopRight(img, res, 50, 10, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, -1, -1, 139, 10}));
+    assert(areEquals(res, {false, -1, -1, 149, 10}));
     
     img =CImg<>(FOLDER "no_path_to_right_left_2.png");
     initTrace(img);
@@ -138,7 +138,7 @@ void testNoPathTopRight(){
     
     moveTopRight(img, res, 50, 10, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, -1, -1, 149, 10}));
+    assert(areEquals(res, {false, -1, -1, 150, 10}));
     
 }
 
@@ -173,7 +173,7 @@ void testMoveTopLeftUntil(){
     
     moveTopLeftUntil(img, res, 50, 20, 1, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 4, 20, -1, -1}));
+    assert(areEquals(res, {false, -1, 20, -1, -1}));
     
     img = CImg<>(FOLDER "stairs_left.png");
     initTrace(img);
@@ -182,7 +182,7 @@ void testMoveTopLeftUntil(){
     
     moveTopLeftUntil(img, res, 50, 2, 2, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 3, 2, -1, -1}));
+    assert(areEquals(res, {false, -1, 2, -1, -1}));
     
     //go after the column but blocked on the same line
     img = CImg<>(FOLDER "stairs_left_2.png");
@@ -192,7 +192,7 @@ void testMoveTopLeftUntil(){
     
     moveTopLeftUntil(img, res, 50, 30, 8, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 5, 30, -1, -1}));
+    assert(areEquals(res, {false, -1, 30, -1, -1}));
     
     // go after the column and find the path
     img = CImg<>(FOLDER "path_stairs_left.png");
@@ -240,7 +240,7 @@ void testTopDoubleStairs(){
     
     moveToTop(img, res, 10, 145, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 10, 145, 89, 145}));
+    assert(areEquals(res, {false, -1, 145, 100, 145}));
     
     
     img = CImg<>(FOLDER "double_stairs.png");
@@ -249,7 +249,7 @@ void testTopDoubleStairs(){
     solution = vector<int>(img._height, -1);    
     moveToTop(img, res, 89, 145, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 10, 145, 89, 145}));
+    assert(areEquals(res, {false, -1, 145, 100, 145}));
     
 }
 
@@ -279,7 +279,7 @@ void testNoPathBottomRight(){
     moveBottomRight(img, res, 99, 139, solution);
     displayIfDebug(colored);
 
-    assert(areEquals(res, {false, -1, -1, 139, 139}));
+    assert(areEquals(res, {false, -1, -1, 149, 139}));
 
     img = CImg<>(FOLDER "no_path_to_left_2.png");
     img.rotate(180.0);    
@@ -333,7 +333,7 @@ void testNoPathBottomLeft(){
     vector<int> solution = vector<int>(img._height, -1);
     moveBottomLeft(img, res, 99, 139, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 10, 139, -1, -1}));
+    assert(areEquals(res, {false, -1, 139, -1, -1}));
     
     img =CImg<>(FOLDER "no_path_to_right_left_2.png");
     img.rotate(180.0);
@@ -343,7 +343,7 @@ void testNoPathBottomLeft(){
     solution = vector<int>(img._height, -1);
     moveBottomLeft(img, res, 99, 139, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 0, 139, -1, -1}));
+    assert(areEquals(res, {false, -1, 139, -1, -1}));
     
 }
 
@@ -379,7 +379,7 @@ void testMoveBottomRightUntil(){
     vector<int> solution = vector<int>(img._height, -1);
     moveBottomRightUntil(img, res, 99, 129, 148, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, -1, -1, 145, 129}));
+    assert(areEquals(res, {false, -1, -1, 149, 129}));
     
     img = CImg<>(FOLDER "stairs_left.png");
     img.rotate(180.0);    
@@ -388,7 +388,7 @@ void testMoveBottomRightUntil(){
     solution = vector<int>(img._height, -1);
     moveBottomRightUntil(img, res, 99, 147, 147, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, -1, -1, 146, 147}));
+    assert(areEquals(res, {false, -1, -1, 149, 147}));
     
     //go after the column but blocked on the same line
     img = CImg<>(FOLDER "stairs_left_2.png");
@@ -398,7 +398,7 @@ void testMoveBottomRightUntil(){
     solution = vector<int>(img._height, -1);
     moveBottomRightUntil(img, res, 99, 119, 141, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, -1, -1, 144, 119}));
+    assert(areEquals(res, {false, -1, -1, 149, 119}));
     
     // go after the column and find the path
     img = CImg<>(FOLDER "path_stairs_left.png");
@@ -449,7 +449,7 @@ void testBottomDoubleStairs(){
     
     moveToBottom(img, res, 139, 4, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 60, 4, 139, 4}));
+    assert(areEquals(res, {false, 49, 4, 149, 4}));
     
     
     img = CImg<>(FOLDER "double_stairs.png");
@@ -459,7 +459,7 @@ void testBottomDoubleStairs(){
     solution = vector<int>(img._height, -1);    
     moveToBottom(img, res, 60, 4, solution);
     displayIfDebug(colored);
-    assert(areEquals(res, {false, 60, 4, 139, 4}));
+    assert(areEquals(res, {false, 49, 4, 149, 4}));
     
 }
 
@@ -520,7 +520,7 @@ void testGoThrough(){
         x = 0;
         y = 100 - i * 10;
         
-        goThrough(img, x, y);
+        goThroughRight(img, x, y);
         assert(x == 40 - i*10); 
         img.crop(10, 0, 149 - i * 10, 149);
     }
@@ -555,8 +555,21 @@ void testSplitChar(){
     displayIfDebug(last);
 }
 
+void testErrorFound(){
+    // here we test whether the algorithm is going to end
+    // (bug found during other tests)
+    CImg<> img = CImg<>(FOLDER"bug-rn.png");
+    initTrace(img);
+    CImg<> first;
+    CImg<> remaining;
+
+    splitChar(img, first, remaining);
+}
+
+
 int main() {
     cout << "Test overlapping segmentation" << endl;
+
     testMoveToTop();
     testNoPathTopLeft();
     testMoveTopLeftAndTop();
@@ -579,6 +592,7 @@ int main() {
     testMoveBottomBottomSided();
     testBottomDoubleStairs();
     
+    testErrorFound();
     
     return (EXIT_SUCCESS);
 }

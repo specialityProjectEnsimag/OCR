@@ -19,7 +19,7 @@ using namespace std;
 
 #define BLACK_PIXEL 0
 #define WHITE_PIXEL 255
-
+#define PI 3.14159265
 namespace preprocessing
 {  
  
@@ -63,6 +63,13 @@ namespace preprocessing
      * @return      Skeletonized image
      */
     CImg<> skeletonization(const CImg<>& src);
+    
+    /**
+     * Automatic rotation using Hough space in order to redress the image
+     * @param src   Image in black and white
+     * @return      Rotated image
+     */
+    CImg<> hough_rotation(const CImg<>& src, const double deg_min = 45, const double deg_max = 145, const int step = 360);
     
     /**
      * Modifies the image with noise correction, squeletization and filters

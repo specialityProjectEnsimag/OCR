@@ -22,7 +22,7 @@ using namespace boost::filesystem;
 
 /**
  * Gives the corresponding label
- * @param file  The name of the directory
+ * @param dir  The name of the directory
  * @return      The corresponding label
  */
 char corresponding_label(string dir);

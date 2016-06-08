@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     cout << "HMM loaded !" << endl;
 
     vector <forecast_type> words;
-    vector <char> hmmWords;
+    string hmmWords;
 
     for(int i = 1; i < argc; i++){
         cout << endl << endl;
@@ -97,38 +97,60 @@ int main(int argc, char** argv) {
 
         CImg<> document;
         try{
-            document = CImg<>(argv[i]);
+            document = image_io::import(argv[i]);
         }catch(CImgIOException e){
             cerr << "Error on file " << argv[i] << endl;
             exit(1);
         }
 
+        
+        // Pre preocessing of the image
+        float tab[9] = { 1, 2, 1, 2, 3, 2, 1, 2, 1 };
+        CImg<> mask(tab,3,3);
+        document = preprocessing::linear_filter(document, mask);
+        image_io::displayImage(document);
+        document = preprocessing::otsu_binarization(document);
+        image_io::displayImage(document);
+        document = preprocessing::linear_filter(document, mask);
+        image_io::displayImage(document);
+        document = preprocessing::otsu_binarization(document);
+        image_io::displayImage(document);
+        document = preprocessing::hough_rotation(document,80,110,600);
+        image_io::displayImage(document);
+        
         vector< text_line* > lines;
         splitLines(document, lines);
-        double wordsThreshold = space_detection::getSpaceThreshold(lines);
         for(unsigned int li = 0; li < lines.size(); li++){
+            // Delete little lines
+            if (lines[li]->img._height < 9) {
+                continue;
+            } 
+            
+            vector< text_line* > l;
+            l.push_back(lines[li]);
+            double wordsThreshold = space_detection::getSpaceThreshold(l);
             text_line line = *lines[li];
             line.img = projection::reduce(line.img);
             vector< text_character* > characters;
             splitCharacters(line.img, characters, wordsThreshold);
-
             for(unsigned int ch = 0; ch < characters.size(); ch++){
+                if (characters[ch]->img._height < 5 || characters[ch]->img._width < 5) {
+                    continue;
+                } 
+                
                 text_character character = *characters[ch];
-                preprocessing::preprocessing(character.img);
-
                 character = projection::reduce(character, line.up_barrier, line.low_barrier);
+                preprocessing::preprocessing(character.img);
                 character.img.resize(SQUARE, SQUARE, -100, -100, 3);
                 std::vector<forecast_type>  res;
                 forecast.forecast(character, res, MSE);
-                std::vector<forecast_type>::iterator i = res.begin();
+                std::vector<forecast_type>::iterator i = res.begin();//cout << i->upLow << i->character <<endl;
                 // when end of words, use HMM to fix and print result
                 if(character.endOfWords){
                     words.push_back(*i);
-
-                    hmmWords = hmm.viterbi(words);
-                    for(unsigned int w = 0; w < hmmWords.size(); w++){
-                        cout << hmmWords[w];
-                    }
+                    
+                    hmmWords = hmm.viterbi(hmm_data, words);
+                    cout << hmmWords;
                     words.clear();
                     hmmWords.clear();
                     cout << " ";
@@ -136,10 +158,23 @@ int main(int argc, char** argv) {
                     words.push_back(*i);
                 }
 
+
             }
+                        /*vector<int> vertical(projection::horizontalHistogram(lines[li]->img));
+                        vector<int> diff(projection::secondDifference(vertical));
+
+                        assert(vertical.size() == diff.size());
+                        cimg_forXY(lines[li]->img, x, y){
+                            if (x < diff[y] && (y == lines[li]->up_barrier || y == lines[li]->low_barrier)) {
+                                (lines[li]->img)(x,y) = 150;
+                            }
+                        }
+                        image_io::displayImage(lines[li]->img);*/
+            
             // end of line in the document
             cout << endl;
 
+            
             text_character::freeVector(characters);
         }
 

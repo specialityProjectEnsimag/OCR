@@ -1,10 +1,10 @@
 #include "hmm.h"
 
-vector<char> HMM::viterbi(vector<forecast_type> observed_word) {
+string HMM::viterbi(string dictionary, vector<forecast_type> observed_word) {
     if (observed_word.size() == 0) {
-        return vector<char>();
+        return "";
     }
-    vector<char> res;
+    string res;
     unsigned int length = observed_word.size();
     double T1[NUMBER_LETTER][length];
     double T2[NUMBER_LETTER][length];
@@ -42,18 +42,21 @@ vector<char> HMM::viterbi(vector<forecast_type> observed_word) {
             imax = statek;
         }
     }
-    res.push_back(corresponding_char(imax));
+    res += corresponding_char(imax);
     
     for (int i = (int) length-1; i >= 1; i--) {
-        res.push_back(corresponding_char(T2[imax][i]));
+        res += corresponding_char(T2[imax][i]);
         imax = T2[imax][i];
     }
     
     // Order the vector
-    reverse(res.begin(),res.end());
+    res = string (res.rbegin(),res.rend());
     
+    #ifdef LEVENSHTEIN
+    return levenshtein(dictionary, res);
+    #else
     return res;
-    
+    #endif
 }
 
 void HMM::print() {
@@ -90,7 +93,103 @@ void HMM::print() {
         cout << endl;
     }
 }
+
+/**
+ * Distance of Levenshtein between two words using two sliding columns
+ * @param word      The first word to compare (low case only)
+ * @param reference The second (low case only)
+ * @return          The distance between both
+ */
+int distanceLevenshtein(string word, string reference) {
+    if (word == reference) return 0;
+    if (word.length() == 0) return word.length();
+    if (reference.length() == 0) return reference.length();
+
+    int length = reference.length() + 1;
     
+    int c1[length];
+    int c2[length];
+
+    // Initialize the colum
+    for (int i = 0; i < length; i++) {
+        c1[i] = i;
+    }
+
+    for (unsigned int i = 0; i < word.length(); i++) {
+        c2[0] = i + 1;
+
+        // Compute the distance
+        for (unsigned int j = 0; j < reference.length(); j++) {
+            bool cost = (reference[i] == word[j]) ? 0 : 1;
+            c2[j + 1] = min(c2[j] + 1, min(c1[j + 1] + 1, c1[j] + cost));
+        }
+
+        // Move from one the column
+        for (int j = 0; j < length; j++) {
+            c1[j] = c2[j];
+        } 
+    }
+
+    return c2[reference.length()];
+}
+
+vector<string> lowercase(string word) {
+    vector<string> res;
+    string tmp;
+    for (unsigned int j = 0; j < word.length(); j++) {
+        if ('A' <= word[j] && word[j] <= 'Z') {
+            tmp += 'a' + word[j] - 'A';
+        } else if ('a' <= word[j] && word[j] <= 'z') {
+            tmp += word[j];
+        } else {
+            res.push_back(tmp);
+            tmp = word[j];
+            res.push_back(tmp);
+            tmp = "";
+        }
+    } 
+    res.push_back(tmp);
+    return res;
+}
+
+string HMM::levenshtein(string dictionary, string word) {
+    string word_dictionnary;
+    string most_probable;
+    int min = 100;
+    vector<string> words(lowercase(word));
+    for (unsigned int i = 0; i < words.size(); i++) {
+        if (!words[i].empty()) {
+            ifstream dico(dictionary);
+            string closest;
+            if (dico.is_open()) {
+                // Letter transition
+                while (getline(dico,word_dictionnary)) {
+
+                    int dL = distanceLevenshtein(word_dictionnary, words[i]);
+                    if (dL <= min) {
+                        min = dL;
+                        closest = string(word_dictionnary);                     
+                    }
+                }
+                // Close the dictionary
+                dico.close();
+            }
+            // Insertion of the other character
+            most_probable += closest;
+            if (i < words.size() - 1) {
+                i++;
+                most_probable += words[i];
+            }
+        }
+    }
+    
+    // Correction of the first letter
+    if ('A' <= word[0] && word[0] <= 'Z' && 'a' <= most_probable[0] && most_probable[0] <= 'z') {
+        most_probable[0] = 'A' + most_probable[0] - 'a';
+    }
+    return most_probable;
+}
+
 void HMM::learn_observation(string dataset, Forecast& forecast) {
     path path(dataset); 
  

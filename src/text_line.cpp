@@ -44,6 +44,14 @@ void text_line::upAndLow(const CImg<>& img, int& up, int& low) {
         int tmp = low;
         low = up;
         up = tmp;
+    }/*
+    up = 0;
+    for (unsigned int j = 0; j < diff.size(); j++) {
+        if (diff[j] > diff[up]) {
+            up = j;                    
+        }
     }
+    low = img.height() - up;
+    */
 }
 

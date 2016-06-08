@@ -81,11 +81,13 @@ int main(int argc, char** argv) {
         cout << "Test - " << img << endl;
         vector<forecast_type> res(analyse(argv[img], &forecast));
         cout << "Analyse without hmm : ";
+        string res_string;
         for (unsigned int i = 0; i < res.size(); i++) {
+            res_string += res.at(i).character;
             cout << res.at(i).character;
         }
         cout << endl;
-        vector<char> end = hmm.viterbi(res);
+        string end = hmm.viterbi("./dictionnary.txt", res_string);
         cout << "Analyse with hmm : ";
         for (unsigned int i = 0; i < res.size(); i++) {
             cout << end.at(i);

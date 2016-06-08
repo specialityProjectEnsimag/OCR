@@ -163,7 +163,7 @@ void Forecast::forecast(const text_character& image, vector<forecast_type>& res,
             break;
         case 1:
             // Middle
-            characters = "azeruosmwxcvn;:+-"; 
+            characters = "azeruosmwxcvn;:+"; 
             select(average, labels, sub_average, sub_labels, characters);
             break;
         case 2:
@@ -173,7 +173,7 @@ void Forecast::forecast(const text_character& image, vector<forecast_type>& res,
             break;
         case 3:
             // Ponctuation
-            characters = ".,"; 
+            characters = ".,-*+"; 
             select(average, labels, sub_average, sub_labels, characters);
             break;
         default:

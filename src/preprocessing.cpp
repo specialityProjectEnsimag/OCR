@@ -268,27 +268,43 @@ namespace preprocessing
         // Compute the angle of rotation
         int angle[step];
         int dark[step];
+        int white[step];
+        
         int max = 0;
         bool active = true;
+        
         memset(angle, 0, sizeof(int)*step);
+        memset(dark, 0, sizeof(int)*step);
+        memset(white, 0, sizeof(int)*step);
+        
         cimg_forX(hough, x) {
             active = true;
             cimg_forY(hough, y) {
-                if (hough(x,y) > 0.5*max_color && active) {
-                    angle[x] ++;
-                    active = false;
-                    if (angle[x] > angle[max]) {
-                        max = x;
-                    } else if (angle[x] == angle[max] && dark[x] > dark[max]) {
-                        max = x;
+                if (hough(x,y) > 0.9*max_color) {
+                    white[x] ++;
+                    if (active) {
+                        angle[x] ++;
+                        active = false;
                     }
-                } else if (hough(x,y) < 0.1*max_color) {
+                }
+                if (hough(x,y) < 0.1*max_color) {
                     active = true;
                     dark[x] ++;
                 }
             }
+            if (angle[x] > angle[max]) {
+                max = x;
+            } else if (angle[x] == angle[max] && dark[x] > dark[max]) {
+                max = x;
+            } else if (angle[x] == angle[max] && dark[x] == dark[max] && white[x] < white[max]) {
+                max = x;
+            }
         }
-       
+     
+                cimg_forY(hough, y) {
+                    hough(max, y ) = 150;
+                }
+                image_io::displayImage(hough);
         // Rotation
         return rotate(src,90-(deg_min + max*dth));
     }

@@ -66,11 +66,13 @@ public:
         learn_observation(dataset, forecast);
     };
     
-    vector<char> viterbi(vector<forecast_type> observed_word);
+    string viterbi(string dictionary, vector<forecast_type> observed_word);
     
     void print();
     
 private:
+    string levenshtein(string dictionary, string word);
+    
     void learn_observation(string dataset, Forecast& forecast);
     
     void learn_transition(string dictionary);

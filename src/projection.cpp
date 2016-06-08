@@ -106,8 +106,7 @@ namespace projection {
         vector<int> left = leftward(img_char_res.img);
         int leftB = firstNonEqual(left, img_char_res.img._width);
         int leftE = firstNonEqual(left, img_char_res.img._width, false);
-        
-        if (leftB != 0) {
+        if (up_barrier > 0.1 * img_char.img._height) {
             if (leftB < up_barrier) {
                 // It is an upper case or a does not know
                 img_char_res.upLow = 0;
@@ -117,15 +116,17 @@ namespace projection {
             }
         }
         
-        if (leftE > low_barrier && leftE != (int) img_char_res.img._height - 1) {
-            // It is a low case or a does not know
-            if (img_char_res.upLow == 1) {
-                img_char_res.upLow = 2;
-            } else {
-                img_char_res.upLow = -1;
+        if (img_char.img._height - low_barrier > 0.1 * img_char.img._height) {
+            if (leftE > low_barrier) {
+                // It is a low case or a does not know
+                if (img_char_res.upLow == 1) {
+                    img_char_res.upLow = 2;
+                } else {
+                    img_char_res.upLow = -1;
+                }
             }
         }
-        
+            
         if (leftE - leftB < 0.5*(low_barrier-up_barrier)) {
             // It is a ponctuation
             img_char_res.upLow = 3;

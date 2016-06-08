@@ -43,6 +43,6 @@ namespace space_detection{
             }
         }
 
-        return std::floor(value / total);
+        return std::floor(0.95*value / total);
     }
 }

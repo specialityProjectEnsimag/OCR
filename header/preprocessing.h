@@ -44,6 +44,15 @@ namespace preprocessing
     CImg<> linear_filter(const CImg<>& src, const CImg<>& mask);
     
     /**
+     * Apply the bilateral filter on each neighborhood
+     * @param src       Image in grayscale
+     * @param color_var Variance for the color gaussian
+     * @param dist_var  Variance for the distance gaussian
+     * @return      Image with the applied filter
+     */
+    CImg<> bilateral_filter(const CImg<>& src, double color_var, double dist_var);
+    
+    /**
      * Apply the median filter on each neighborhood
      * @param src   Image in grayscale
      * @return      Image with the applied filter

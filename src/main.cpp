@@ -103,19 +103,17 @@ int main(int argc, char** argv) {
             exit(1);
         }
 
-        
+        // Display the unmodified document
+        image_io::displayImage(document);
         // Pre preocessing of the image
         float tab[9] = { 1, 2, 1, 2, 3, 2, 1, 2, 1 };
         CImg<> mask(tab,3,3);
         document = preprocessing::linear_filter(document, mask);
-        image_io::displayImage(document);
         document = preprocessing::otsu_binarization(document);
-        image_io::displayImage(document);
         document = preprocessing::linear_filter(document, mask);
-        image_io::displayImage(document);
         document = preprocessing::otsu_binarization(document);
-        image_io::displayImage(document);
         document = preprocessing::hough_rotation(document,80,110,600);
+        document = preprocessing::otsu_binarization(document);
         image_io::displayImage(document);
         
         vector< text_line* > lines;
@@ -144,7 +142,7 @@ int main(int argc, char** argv) {
                 character.img.resize(SQUARE, SQUARE, -100, -100, 3);
                 std::vector<forecast_type>  res;
                 forecast.forecast(character, res, MSE);
-                std::vector<forecast_type>::iterator i = res.begin();//cout << i->upLow << i->character <<endl;
+                std::vector<forecast_type>::iterator i = res.begin();
                 // when end of words, use HMM to fix and print result
                 if(character.endOfWords){
                     words.push_back(*i);
@@ -160,20 +158,18 @@ int main(int argc, char** argv) {
 
 
             }
-                        /*vector<int> vertical(projection::horizontalHistogram(lines[li]->img));
-                        vector<int> diff(projection::secondDifference(vertical));
-
-                        assert(vertical.size() == diff.size());
-                        cimg_forXY(lines[li]->img, x, y){
-                            if (x < diff[y] && (y == lines[li]->up_barrier || y == lines[li]->low_barrier)) {
-                                (lines[li]->img)(x,y) = 150;
-                            }
-                        }
-                        image_io::displayImage(lines[li]->img);*/
             
             // end of line in the document
             cout << endl;
 
+            cimg_forXY(lines[li]->img, x, y){
+                if (y == lines[li]->up_barrier) {
+                    (lines[li]->img)(x,y) = 150;
+                } else if ( y == lines[li]->low_barrier) {
+                    (lines[li]->img)(x,y) = 200;
+                }
+            }
+            image_io::displayImage(lines[li]->img);
             
             text_character::freeVector(characters);
         }

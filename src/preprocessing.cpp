@@ -84,6 +84,25 @@ namespace preprocessing
         return smoothed;
     }
     
+    CImg<> bilateral_filter(const CImg<>& src, double color_var, double dist_var) {
+        CImg<> smoothed(src);
+        CImg<> Neight(3,3);
+        cimg_for3x3(src,x,y,0,0,Neight,float) {
+            double sum = 0;
+            smoothed(x, y, 0, 0) = 0;
+            cimg_forXY(Neight, k, l) {
+                if (!(k == 1 && l == 1)) {
+                    double tmp = exp(-(pow(k,2) + pow(l,2))/(2*dist_var) -pow(src(x,y)-Neight(k,l),2)/(2*color_var));
+                    sum += tmp;
+                    smoothed(x, y, 0, 0) += Neight(k,l)*tmp;
+                }
+            }
+            smoothed(x, y, 0, 0) /= sum;
+        }
+
+        return smoothed;
+    }
+    
     CImg<> median_filter(const CImg<>& src) {
         CImg<> smoothed(src);
 

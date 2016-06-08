@@ -1,5 +1,8 @@
 /**
+ * File:   space_detection.h
+ * Author: clinm
  * 
+ * Created on 03 june 2016 
  */
 
 #include "CImg.h"
@@ -8,8 +11,6 @@
 #include <vector>
 #include "text_line.h"
 #include "image_io.h"
- 
-using namespace std;
 
 #ifndef SPACE_DETECTION_H
 #define	SPACE_DETECTION_H

@@ -1,12 +1,6 @@
-/* 
- * File:   Projection.h
- * Author: clinm
- *
- * Created on 18 mai 2016, 10:06
- */
 
 #ifndef PROJECTION_H
-#define	PROJECTION_H
+#define PROJECTION_H
 
 #include <iostream>
 #include <vector>
@@ -22,6 +16,12 @@ using namespace std;
 #define BLACK_PIXEL 0
 #define WHITE_PIXEL 255
 
+/** 
+ * File:   Projection.h
+ * Author: clinm
+ *
+ * Created on 18 mai 2016, 10:06
+ */
 namespace projection {
     
     /**

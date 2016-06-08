@@ -1,19 +1,20 @@
-/* 
- * File:   text_character.h
- * Author: clinm
- *
- * This class contains all information related to characters
- * 
- */
+ 
 #include "CImg.h"
 using namespace cimg_library;
 
 #include <vector>
 using namespace std;
 
-#ifndef TEXT_CHARACTER
-#define TEXT_CHARACTER
+#ifndef TEXT_CHARACTER_H
+#define TEXT_CHARACTER_H
 
+/** 
+ * File:   text_character.h
+ * Author: clinm
+ *
+ * This class contains all information related to characters
+ * 
+ */
 class text_character
 {
 public:

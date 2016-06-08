@@ -1,12 +1,6 @@
-/* 
- * File:   hmm.h
- * Author: jeanselv
- *
- * Created on 26 mai 2016, 09:21
- */
 
 #ifndef HMM_H
-#define	HMM_H
+#define HMM_H
 
 #include "dataset.h"
 #include "forecast.h"
@@ -24,6 +18,12 @@ using namespace std;
 
 #define printColumns(size, content) cout << setfill(' ') << setw(size) << setprecision(4) << content;
 
+/* 
+ * File:   hmm.h
+ * Author: jeanselv
+ *
+ * Created on 26 mai 2016, 09:21
+ */
 class HMM {
     friend class boost::serialization::access;
     // The array of probabilities from the char x to y in a language

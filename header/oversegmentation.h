@@ -1,9 +1,4 @@
-/* 
- * File:   Projection.h
- * Author: clinm
- *
- * Created on 30 mai 2016, 08:26
- */
+
 #include "CImg.h"
 #include <iostream>
 #include <vector>
@@ -15,9 +10,21 @@
 using namespace cimg_library;
 using namespace std;
 
-#ifndef OVERSAGMENTATION
-#define OVERSAGMENTATION 
+#ifndef OVERSEGMENTATON
+#define OVERSEGMENTATON 
 
+/**
+ * File:   oversegmentation.h
+ * Author: clinm
+ *
+ * Created on 30 mai 2016, 08:26
+ * 
+ * Dynamic algorithm that tries several possible cuts and choose the best one.
+ * It is called oversegmentation because it can possibly cut more than necessary a word.
+ * Normally, by binding it with a strong recognition algorithm, it is able to find characters
+ * between the good cuts and thus the best matching word
+ * 
+ */
 namespace oversegmentation {
 
 	/**

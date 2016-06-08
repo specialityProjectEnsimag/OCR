@@ -1,9 +1,3 @@
-/* 
- * File:   forecast.h
- * Author: jeanselv
- *
- * Created on 17 mai 2016, 14:51
- */
 
 #ifndef _FORECAST_H
 #define _FORECAST_H
@@ -35,6 +29,12 @@ struct forecast_type {
   bool operator<(const forecast_type& other) const { return other.probability > probability; }
 };
 
+/* 
+ * File:   forecast.h
+ * Author: jeanselv
+ *
+ * Created on 17 mai 2016, 14:51
+ */
 class Forecast {
     vector< CImg<>* > images;
     vector< char > labels;

@@ -1,11 +1,24 @@
-/* 
+#ifndef OVERLAPPINGSEGMENTATION_H
+#define	OVERLAPPINGSEGMENTATION_H
+
+#include "image_io.h"
+#include <vector>
+#include "projection.h"
+
+#include "CImg.h"
+using namespace cimg_library;
+
+#define WHITE_PIXEL 255
+
+#include <iostream>
+using namespace std;
+
+/** 
  * File:   overlappingSegmentation.h
  * Author: clinm
  *
  * Created on 20 mai 2016, 09:35
- */
-
-/**
+ *
  *  This algorithm is an implementation of the publication : 
  *                  Separation of overlapping character
  *                    N. Papamarkos and T. Koutalianos
@@ -29,22 +42,6 @@
  * 
  *      PRINT_DEBUG is also used in the associated test file to display the result
  */
-
-
-#ifndef OVERLAPPINGSEGMENTATION_H
-#define	OVERLAPPINGSEGMENTATION_H
-
-#include "image_io.h"
-#include <vector>
-
-#include "CImg.h"
-using namespace cimg_library;
-
-#define WHITE_PIXEL 255
-
-#include <iostream>
-using namespace std;
-
 namespace overlappingSegmentation
 {
     
@@ -199,9 +196,17 @@ namespace overlappingSegmentation
      * @param x     x coordinate, at the beginning contains the starting point
      * @param y     y coordinate, at the beginning contains the starting point
      */
-    void goThrough(const CImg<>& img, int& x, const int& y);
+    void goThroughRight(const CImg<>& img, int& x, const int& y);
     
-    
+    /**
+     * Go throught the left and give the location of the first white pixel
+     * @param img
+     * @param x     x coordinate, at the beginning contains the starting point
+     * @param y     y coordinate, at the beginning contains the starting point
+     */
+    void goThroughLeft(const CImg<>& img, int& x, const int& y);    
+
+
     /**
      * Divides the source image into two subimages following the line
      * of x coordinates (from top to buttom)

@@ -116,8 +116,10 @@ int main(int argc, char** argv) {
         document = preprocessing::otsu_binarization(document);
         image_io::displayImage(document);
         
+        double paragraphThreshold = space_detection::getParagraphThreshold(document);
+        cout << "Paragraph threshold " << paragraphThreshold << endl;
         vector< text_line* > lines;
-        splitLines(document, lines);
+        splitLines(document, lines, paragraphThreshold);
         for(unsigned int li = 0; li < lines.size(); li++){
             // Delete little lines
             if (lines[li]->img._height < 9) {
@@ -172,6 +174,9 @@ int main(int argc, char** argv) {
             image_io::displayImage(lines[li]->img);
             
             text_character::freeVector(characters);
+            if(lines[li]->endOfParagraph){
+                cout << endl;
+            }
         }
 
         text_line::freeVector(lines);

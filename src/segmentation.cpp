@@ -9,8 +9,8 @@
 
 namespace segmentation{
     
-    void splitLines(const CImg<>& text, vector< text_line* >& lines){
-        sliding_window::splitLines(text, lines);
+    void splitLines(const CImg<>& text, vector< text_line* >& lines, double paragraphThreshold){
+        sliding_window::splitLines(text, lines, paragraphThreshold);
     }
 
     void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double threshold){

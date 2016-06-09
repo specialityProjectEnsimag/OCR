@@ -27,6 +27,12 @@ public:
     int up_barrier;
     int low_barrier;
 
+
+    /**
+     * If set to true, means that it is the paragraph's last line
+     */
+    bool endOfParagraph;
+    
     text_line(CImg<> image);
     text_line(const text_line& orig);
     virtual ~text_line();

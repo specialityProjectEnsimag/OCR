@@ -8,10 +8,12 @@
 #include "text_line.h"
 
 text_line::text_line(CImg<> image) : img(image) {
+    endOfParagraph = false;
     upAndLow(img, up_barrier, low_barrier);
 }
 
 text_line::text_line(const text_line& orig) : img(orig.img) {
+    endOfParagraph = false;    
     up_barrier = orig.up_barrier;
     low_barrier = orig.low_barrier;
 }

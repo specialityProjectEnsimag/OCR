@@ -9,12 +9,12 @@
 
 namespace sliding_window{
     
-    void splitLines(const CImg<>& text, vector< text_line* >& lines){
+    void splitLines(const CImg<>& text, vector< text_line* >& lines, double paragraphThreshold){
         vector<int> sep = projection::leftward(text);
 
         int state = 1; // 0: blank, 1: something
         int beg = 0;
-
+        int space = 0;
         int full = text._width;
         sep.push_back(full);
         for(unsigned int i = 0; i < sep.size(); i++){
@@ -22,15 +22,27 @@ namespace sliding_window{
                 if(sep.at(i) != full){
                     beg = i;
                     state = 1;
+                }else{
+                    space ++;
                 }
             }else if(state == 1){
                 if(sep.at(i) == full){
                     state = 0;
                     text_line* l = new text_line(CImg<>(text.get_crop(0, beg, full-1, i-1)));
+                    if(space >= paragraphThreshold){
+                        if(lines.size() > 0){
+                            lines.back()->endOfParagraph = true;
+                        }
+                    }
+
                     lines.push_back(l);
+                    space = 0;
                 }
             }
-        }   
+        }  
+
+        lines.back()->endOfParagraph = true;
+
     }
     
     void splitCharacters(const CImg<>& line, vector< text_character* >& characters, double wordThreshold){

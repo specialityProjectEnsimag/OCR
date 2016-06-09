@@ -34,7 +34,7 @@ void printHeader(){
  * @param preprocessing         If set to TRUE, a preprocessing is applied on the imae
  */
 void testSplitStat(const char* fileName, vector<int> charactersPerLine,
-                          void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
+                          void (*sLines)(const CImg<>& text, vector< text_line* >& lines, double),
                           void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters, double)){
     CImg<> img = image_io::import(fileName);
     display(img);
@@ -48,7 +48,7 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine,
     int nLineTooMuch = 0;
             
     vector< text_line* > split;
-    sLines(crop, split);    
+    sLines(crop, split, -1);    
 
     if(split.size() != charactersPerLine.size()){
         cout << "Number of lines incorrect !" << endl;
@@ -100,7 +100,7 @@ void testSplitStat(const char* fileName, vector<int> charactersPerLine,
 }
 
 void testAll(const char* baseFile, const char* title, std::vector<int> charPerLine,
-                      void (*sLines)(const CImg<>& text, vector< text_line* >& lines),
+                      void (*sLines)(const CImg<>& text, vector< text_line* >& lines, double),
                       void (*sCharacters)(const CImg<>& line, vector< text_character* >& characters, double)){
     cout << title << endl;
     printHeader();

@@ -19,10 +19,11 @@ namespace segmentation{
     
     /**
      * Split the given text into lines.
-     * @param text      The text to split, the image has to be reduced
-     * @param lines     The line extracted with no information
+     * @param text                  The text to split, the image has to be reduced
+     * @param lines                 The line extracted with no information
+     * @param paragraphThreshold    Threshold value to detect paragraph
      */
-    void splitLines(const CImg<>& text, vector< text_line* >& lines);
+    void splitLines(const CImg<>& text, vector< text_line* >& lines, double paragraphThreshold = -1);
 
     /**
      * Given a line split into characters. When wordThreshold is given, will add information about

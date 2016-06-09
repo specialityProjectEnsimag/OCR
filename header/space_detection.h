@@ -27,6 +27,13 @@ namespace space_detection{
      */
     double getSpaceThreshold(const vector< text_line* >& lines);
 
+    /**
+     * Compute the threshold in order to detect paragraphs
+     * @param document	The document to which we compute the threshold
+     * @return Threshold, under this value it should be a space between lines
+     * 					  above this value it should be a new paragraph
+     */
+	double getParagraphThreshold(const CImg<>& document);
 }
 
 #endif	/* SPACE_DETECTION_H */

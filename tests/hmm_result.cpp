@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
             cout << res.at(i).character;
         }
         cout << endl;
-        string end = hmm.viterbi("./dictionnary.txt", res_string);
+        string end = hmm.viterbi("./dictionnary.txt", res);
         cout << "Analyse with hmm : ";
         for (unsigned int i = 0; i < res.size(); i++) {
             cout << end.at(i);

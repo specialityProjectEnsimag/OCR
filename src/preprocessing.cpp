@@ -320,10 +320,10 @@ namespace preprocessing
             }
         }
      
-                cimg_forY(hough, y) {
-                    hough(max, y ) = 150;
-                }
-                image_io::displayImage(hough);
+        cimg_forY(hough, y) {
+            hough(max, y ) = 150;
+        }
+        image_io::displayImage(hough);
         // Rotation
         return rotate(src,90-(deg_min + max*dth));
     }

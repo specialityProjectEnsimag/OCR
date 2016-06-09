@@ -158,7 +158,7 @@ void Forecast::forecast(const text_character& image, vector<forecast_type>& res,
             break;
         case 0:
             // Up
-            characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZtidfhkl?/!\\(){}&*0123456789"; 
+            characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZbtidfhkl?/!\\(){}&*0123456789"; 
             select(average, labels, sub_average, sub_labels, characters);
             break;
         case 1:
